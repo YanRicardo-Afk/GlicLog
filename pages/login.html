@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlicoLog — Login</title>
+  <link rel="stylesheet" href="/DiarioGlicemico/css/styleLogin.css">
+</head>
+<body>
+
+  <main class="app">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">GlicoLog</div>
+        <div class="brand-sub">Diário glicêmico</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="glucose-bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D8B6E" stroke-width="2.5" stroke-linecap="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Zona segura: 70–180 mg/dL</span>
+      </div>
+
+      <h1 class="card-title">Bem-vindo de volta</h1>
+      <p class="card-sub">Entre na sua conta para continuar</p>
+
+      <div id="login-toast" class="toast" role="alert" aria-live="polite"></div>
+
+      <div class="field">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+        <span class="field-error" id="err-login-email">Insira um e-mail válido</span>
+      </div>
+
+      <div class="field">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password">
+        <span class="field-error" id="err-login-senha">A senha é obrigatória</span>
+      </div>
+
+      <button class="btn-primary" id="btn-login" type="button">Entrar</button>
+
+      <div class="divider"><hr><span>ou</span><hr></div>
+
+      <p class="link-row">
+        Não tem conta? <a href="cadastro.html">Criar conta</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="/DiarioGlicemico/js/login.js"></script>
+</body>
+</html>

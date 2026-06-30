@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlicoLog — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/DiarioGlicemico/css/styleLogin.css" />
+  <link rel="stylesheet" href="/DiarioGlicemico/css/dashboard.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"/>
+          <path d="M9 16l2 2 4-4"/>
+        </svg>
+      </div>
+      <span class="brand-name">GlicoLog</span>
+    </div>
+
+    <nav class="topbar-nav" aria-label="Navegação principal">
+      <a href="dashboard.html" class="nav-link active" aria-current="page">Início</a>
+      <a href="historico.html" class="nav-link">Histórico</a>
+      <a href="perfil.html" class="nav-link">Perfil</a>
+    </nav>
+
+    <button class="avatar-btn" id="avatarBtn" aria-label="Menu do perfil" aria-expanded="false">
+      <span class="avatar-initials" id="avatarInitials">--</span>
+    </button>
+  </header>
+
+  <!-- MAIN -->
+  <main class="dashboard-layout">
+
+    <!-- SAUDAÇÃO -->
+    <section class="greeting-section" aria-label="Boas-vindas">
+      <div class="greeting-text">
+        <p class="greeting-label" id="greetingLabel">Bom dia</p>
+        <h1 class="greeting-name" id="greetingName">Carregando...</h1>
+      </div>
+      <p class="greeting-date" id="greetingDate"></p>
+    </section>
+
+    <!-- CARD ÚLTIMA MEDIÇÃO -->
+    <section class="last-reading-section" aria-label="Última medição">
+      <div class="last-reading-card" id="lastReadingCard">
+        <div class="last-reading-info">
+          <span class="last-reading-label">Última medição</span>
+          <div class="last-reading-value" id="lastReadingValue">
+            <span class="value-number" id="valueNumber">—</span>
+            <span class="value-unit">mg/dL</span>
+          </div>
+          <span class="last-reading-time" id="lastReadingTime">Nenhum registro ainda</span>
+        </div>
+        <div class="last-reading-status" id="lastReadingStatus" aria-label="Status glicêmico">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AÇÕES RÁPIDAS -->
+    <section class="actions-section" aria-label="Ações rápidas">
+      <h2 class="section-title">O que deseja fazer?</h2>
+      <div class="actions-grid">
+
+        <a href="registro.html" class="action-card action-primary" aria-label="Novo registro de glicemia">
+          <div class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <div class="action-text">
+            <span class="action-title">Novo Registro</span>
+            <span class="action-desc">Registrar medição agora</span>
+          </div>
+        </a>
+
+        <a href="historico.html" class="action-card" aria-label="Ver histórico de medições">
+          <div class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="action-text">
+            <span class="action-title">Histórico</span>
+            <span class="action-desc">Ver medições anteriores</span>
+          </div>
+        </a>
+
+        <a href="perfil.html" class="action-card" aria-label="Acessar perfil">
+          <div class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="action-text">
+            <span class="action-title">Perfil</span>
+            <span class="action-desc">Dados e configurações</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- RESUMO DO DIA -->
+    <section class="summary-section" aria-label="Resumo do dia">
+      <h2 class="section-title">Hoje</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-value" id="todayCount">0</span>
+          <span class="summary-label">Medições</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="todayAvg">—</span>
+          <span class="summary-label">Média mg/dL</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="todayRange">—</span>
+          <span class="summary-label">Variação</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGISTROS RECENTES -->
+    <section class="recent-section" aria-label="Registros recentes">
+      <div class="recent-header">
+        <h2 class="section-title">Recentes</h2>
+        <a href="historico.html" class="see-all-link">Ver todos</a>
+      </div>
+      <ul class="recent-list" id="recentList" aria-live="polite">
+        <li class="recent-empty" id="recentEmpty">
+          <span>Nenhuma medição registrada ainda.</span>
+          <a href="registro.html">Criar primeiro registro</a>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="dashboard-footer">
+    <p>GlicoLog &mdash; Controle com clareza</p>
+  </footer>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

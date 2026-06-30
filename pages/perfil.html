@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>GlicoLog — Perfil</title>
+
+    <link rel="stylesheet" href="/DiarioGlicemico/css/styleLogin.css">
+    <link rel="stylesheet" href="/DiarioGlicemico/css/dashboard.css">
+    <link rel="stylesheet" href="/DiarioGlicemico/css/perfil.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"/>
+                </svg>
+            </div>
+            <span class="brand-name">GlicoLog</span>
+        </div>
+
+        <nav class="topbar-nav">
+            <a href="dashboard.html" class="nav-link">Início</a>
+            <a href="historico.html" class="nav-link">Histórico</a>
+            <a href="perfil.html" class="nav-link active">Perfil</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-layout">
+        <section class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">—</div>
+            <h1 class="profile-name" id="profileName">Carregando...</h1>
+            <p class="profile-email" id="profileEmail">—</p>
+        </section>
+
+        <section class="profile-grid">
+            <div class="summary-card">
+                <span class="summary-value" id="countRegister">0</span>
+                <span class="summary-label">Registros</span>
+            </div>
+
+            <div class="summary-card">
+                <span class="summary-value" id="avgRegister">—</span>
+                <span class="summary-label">Média</span>
+            </div>
+
+            <div class="summary-card">
+                <span class="summary-value">T1D</span>
+                <span class="summary-label">Tipo</span>
+            </div>
+        </section>
+
+        <section class="profile-actions">
+            <button class="btn-secondary">Editar Perfil</button>
+            <button class="btn-danger" id="logoutBtn">Sair</button>
+        </section>
+    </main>
+
+    <footer class="dashboard-footer">
+        GlicoLog — Controle com clareza
+    </footer>
+
+    <script src="../js/perfil.js"></script>
+
+</body>
+</html>
