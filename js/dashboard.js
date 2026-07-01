@@ -91,22 +91,23 @@ function renderGreeting(user) {
   const name = user?.nome ?? 'Usuário';
   const firstName = name.split(' ')[0];
 
-  greetingLabel.textContent = getGreeting();
-  greetingName.textContent  = firstName;
-  greetingDate.textContent  = formatDateFull(new Date());
-  avatarInitials.textContent = getInitials(name);
+  // CORREÇÃO: Verificações de segurança (Garante que só altera se o elemento existir na tela)
+  if (greetingLabel) greetingLabel.textContent = getGreeting();
+  if (greetingName) greetingName.textContent  = firstName;
+  if (greetingDate) greetingDate.textContent  = formatDateFull(new Date());
+  if (avatarInitials) avatarInitials.textContent = getInitials(name);
 }
 
 function renderLastReading(registros) {
-  const valueNumber    = document.getElementById('valueNumber');
+  const valueNumber     = document.getElementById('valueNumber');
   const lastReadingTime = document.getElementById('lastReadingTime');
-  const statusDot      = document.getElementById('statusDot');
-  const statusText     = document.getElementById('statusText');
+  const statusDot       = document.getElementById('statusDot');
+  const statusText      = document.getElementById('statusText');
 
   if (registros.length === 0) {
-    valueNumber.textContent     = '—';
-    lastReadingTime.textContent = 'Nenhum registro ainda';
-    statusText.textContent      = '—';
+    if (valueNumber) valueNumber.textContent     = '—';
+    if (lastReadingTime) lastReadingTime.textContent = 'Nenhum registro ainda';
+    if (statusText) statusText.textContent      = '—';
     return;
   }
 
@@ -117,10 +118,10 @@ function renderLastReading(registros) {
   const last   = sorted[0];
   const status = getGlucoseStatus(last.glicemia);
 
-  valueNumber.textContent     = last.glicemia;
-  lastReadingTime.textContent = `às ${formatTime(last.dataHora)}`;
-  statusDot.className         = `status-dot ${status.dotClass}`;
-  statusText.textContent      = status.label;
+  if (valueNumber) valueNumber.textContent     = last.glicemia;
+  if (lastReadingTime) lastReadingTime.textContent = `às ${formatTime(last.dataHora)}`;
+  if (statusDot) statusDot.className         = `status-dot ${status.dotClass}`;
+  if (statusText) statusText.textContent      = status.label;
 }
 
 function renderSummary(registrosHoje) {
@@ -128,11 +129,11 @@ function renderSummary(registrosHoje) {
   const todayAvg   = document.getElementById('todayAvg');
   const todayRange = document.getElementById('todayRange');
 
-  todayCount.textContent = registrosHoje.length;
+  if (todayCount) todayCount.textContent = registrosHoje.length;
 
   if (registrosHoje.length === 0) {
-    todayAvg.textContent   = '—';
-    todayRange.textContent = '—';
+    if (todayAvg) todayAvg.textContent   = '—';
+    if (todayRange) todayRange.textContent = '—';
     return;
   }
 
@@ -141,8 +142,8 @@ function renderSummary(registrosHoje) {
   const min    = Math.min(...values);
   const max    = Math.max(...values);
 
-  todayAvg.textContent   = avg;
-  todayRange.textContent = `${min}–${max}`;
+  if (todayAvg) todayAvg.textContent   = avg;
+  if (todayRange) todayRange.textContent = `${min}–${max}`;
 }
 
 function renderRecentList(registros) {

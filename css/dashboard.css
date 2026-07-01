@@ -433,6 +433,11 @@
     padding: 1rem 1.25rem;
   }
 
+  /* CORREÇÃO AQUI: Garante que o ícone não seja esmagado se o texto for longo */
+  .action-icon {
+    flex-shrink: 0;
+  }
+
   .action-text {
     display: flex;
     flex-direction: column;
@@ -446,13 +451,13 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  /* Nav mobile — bottom bar */
+  /* CORREÇÃO AQUI: Centralizado dentro da mesma media query, como o prof pediu */
   .mobile-nav {
     display: flex;
   }
 }
 
-/* Bottom nav mobile */
+/* Bottom nav mobile (Configuração padrão ocultada) */
 .mobile-nav {
   display: none;
   position: fixed;
@@ -492,10 +497,4 @@
 .mobile-nav-item.active,
 .mobile-nav-item:hover {
   color: var(--green-primary);
-}
-
-@media (max-width: 600px) {
-  .mobile-nav {
-    display: flex;
-  }
 }
