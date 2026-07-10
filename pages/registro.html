@@ -13,42 +13,28 @@
 
 <body>
 
-    <header class="topbar">
-        <div class="topbar-brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"/>
+    <!-- Botão voltar isolado conforme seu objetivo visual -->
+    <div class="header-minimal">
+        <a href="dashboard.html" class="back-link-minimal" aria-label="Voltar para o início">
+            <div class="back-icon-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
             </div>
-            <span class="brand-name">GlicoLog</span>
-        </div>
-
-        <nav class="topbar-nav">
-            <a href="dashboard.html" class="nav-link">Início</a>
-            <a href="historico.html" class="nav-link">Histórico</a>
-            <a href="perfil.html" class="nav-link">Perfil</a>
-        </nav>
-    </header>
- <!-- Botão voltar -->
-    <div class="header-minimal">
-  <a href="dashboard.html" class="back-link-minimal" aria-label="Voltar para o início">
-    <div class="back-icon-arrow" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
+            <span class="back-text-minimal">Voltar</span>
+        </a>
     </div>
-    <span class="back-text-minimal">Voltar</span>
-  </a>
-</div>
 
     <main class="dashboard-layout">
-        <section>
+        <!-- Alterado para div para evitar o aviso de seção sem cabeçalho -->
+        <div class="registration-header-container">
             <h1 class="card-title">Novo Registro</h1>
             <p class="card-sub">Registre sua medição glicêmica.</p>
-        </section>
+        </div>
 
-        <section class="card registro-card">
+        <!-- Alterado de section para div para corrigir o Warning do W3C -->
+        <div class="card registro-card">
             <div class="toast" id="toast"></div>
 
             <form id="registroForm">
@@ -88,7 +74,7 @@
 
                 <button class="btn-primary">Salvar Registro</button>
             </form>
-        </section>
+        </div>
     </main>
 
     <script src="../js/registro.js"></script>

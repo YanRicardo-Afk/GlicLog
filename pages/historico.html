@@ -17,7 +17,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">
                 <svg viewBox="0 0 24 24">
-                    <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"/>
+                    <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"></path>
                 </svg>
             </div>
             <span class="brand-name">GlicoLog</span>
@@ -30,33 +30,32 @@
         </nav>
     </header>
     
-     <!-- Botão voltar -->
-      <div class="header-minimal">
+    <div class="header-minimal">
         <a href="dashboard.html" class="back-link-minimal" aria-label="Voltar para o início">
             <div class="back-icon-arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
             </div>
             <span class="back-text-minimal">Voltar</span>
         </a>
-        </div>
+    </div>
 
     <main class="dashboard-layout">
-        <section>
+        <div class="history-header">
             <h1 class="card-title">Histórico de Medições</h1>
             <p class="card-sub">Acompanhe seus registros anteriores.</p>
-        </section>
+        </div>
 
-        <section>
+        <div class="history-container">
             <ul class="history-list" id="historyList">
-                <div class="history-empty" id="empty">
+                <li class="history-empty" id="empty">
                     Nenhuma medição registrada.
                     <a href="registro.html">Criar primeiro registro</a>
-                </div>
+                </li>
             </ul>
-        </section>
+        </div>
     </main>
 
     <footer class="dashboard-footer">
