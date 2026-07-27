@@ -28,7 +28,7 @@ app.use(
     "/api/auth",
     authRoutes
 );
-
+const path = require("path");
 const glucoseRoutes = require("./routes/glucose.routes");
 
 const PORT = process.env.PORT || 3000;
@@ -37,7 +37,14 @@ app.use(
     "/api/glucose",
     glucoseRoutes
 );
-
+app.use(
+    express.static(
+        path.join(
+            __dirname,
+            "../../frontend"
+        )
+    )
+);
 app.listen(
     PORT,
     () => {

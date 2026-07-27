@@ -1,68 +1,446 @@
 /* ============================================================
-   GlicoLog — login.js
-   Validação e comportamento da tela de login
+   GlicoLog — cadastro.js
+   Cadastro e validação da tela de criação de conta
    ============================================================ */
 
-const emailInput  = document.getElementById('login-email');
-const senhaInput  = document.getElementById('login-senha');
-const btnLogin    = document.getElementById('btn-login');
-const toast       = document.getElementById('login-toast');
+const nomeInput = document.getElementById('cad-nome');
+const emailInput = document.getElementById('cad-email');
+const senhaInput = document.getElementById('cad-senha');
+const confirmaInput = document.getElementById('cad-confirma');
 
-const errEmail = document.getElementById('err-login-email');
-const errSenha = document.getElementById('err-login-senha');
+const btnCadastro = document.getElementById('btn-cadastro');
+const toast = document.getElementById('cad-toast');
 
-/* --- Utilitários --- */
+const errNome = document.getElementById('err-cad-nome');
+const errEmail = document.getElementById('err-cad-email');
+const errSenha = document.getElementById('err-cad-senha');
+const errConfirma = document.getElementById('err-cad-confirma');
+
+const strengthLabel = document.getElementById('strength-label');
+
+const strengthSegments = [
+  document.getElementById('s1'),
+  document.getElementById('s2'),
+  document.getElementById('s3'),
+  document.getElementById('s4')
+];
+
+/* ============================================================
+   Utilitários
+   ============================================================ */
+
 function isEmailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+
 function setErro(input, errEl, mostrar) {
-  input.classList.toggle('error', mostrar);
-  errEl.classList.toggle('show', mostrar);
+
+  input.classList.toggle(
+    'error',
+    mostrar
+  );
+
+  errEl.classList.toggle(
+    'show',
+    mostrar
+  );
 }
+
 
 function mostrarToast(mensagem, tipo) {
+
   toast.textContent = mensagem;
-  toast.className = 'toast ' + tipo;
+
+  toast.className =
+    'toast ' + tipo;
 }
+
 
 function limparToast() {
-  toast.className = 'toast';
-  toast.textContent = '';
+
+  toast.className =
+    'toast';
+
+  toast.textContent =
+    '';
 }
 
-/* --- Validação em tempo real --- */
-emailInput.addEventListener('input', () => {
-  if (emailInput.value.trim()) {
-    setErro(emailInput, errEmail, !isEmailValido(emailInput.value.trim()));
+
+/* ============================================================
+   Força da senha
+   ============================================================ */
+
+function verificarForcaSenha(senha) {
+
+  let forca = 0;
+
+  if (senha.length >= 6) {
+    forca++;
   }
-});
 
-senhaInput.addEventListener('input', () => {
-  if (senhaInput.value) {
-    setErro(senhaInput, errSenha, false);
+  if (senha.length >= 8) {
+    forca++;
   }
-});
 
-/* --- Submit --- */
-btnLogin.addEventListener('click', () => {
-  limparToast();
+  if (/[A-Z]/.test(senha)) {
+    forca++;
+  }
 
-  const email = emailInput.value.trim();
-  const senha = senhaInput.value;
+  if (/[0-9!@#$%^&*]/.test(senha)) {
+    forca++;
+  }
 
-  const emailOk = isEmailValido(email);
-  const senhaOk = senha.length > 0;
+  return forca;
+}
 
-  setErro(emailInput, errEmail, !emailOk);
-  setErro(senhaInput, errSenha, !senhaOk);
 
-  if (!emailOk || !senhaOk) return;
+function atualizarForcaSenha() {
 
-  /* Aqui você conectará à autenticação real futuramente */
-  mostrarToast('✓ Login realizado com sucesso!', 'success');
+  const senha =
+    senhaInput.value;
 
-  setTimeout(() => {
-    window.location.href = 'dashboard.html';
-  }, 1200);
-});
+  const forca =
+    verificarForcaSenha(
+      senha
+    );
+
+  // Limpar segmentos
+  strengthSegments.forEach(
+    function(segment) {
+
+      segment.classList.remove(
+        'active'
+      );
+    }
+  );
+
+  if (!senha) {
+
+    strengthLabel.textContent =
+      '';
+
+    return;
+  }
+
+  // Ativar segmentos
+  for (
+    let i = 0;
+    i < forca;
+    i++
+  ) {
+
+    if (strengthSegments[i]) {
+
+      strengthSegments[i]
+        .classList.add(
+          'active'
+        );
+    }
+  }
+
+  // Texto da força
+  if (forca <= 1) {
+
+    strengthLabel.textContent =
+      'Senha fraca';
+
+  } else if (forca === 2) {
+
+    strengthLabel.textContent =
+      'Senha média';
+
+  } else if (forca === 3) {
+
+    strengthLabel.textContent =
+      'Senha boa';
+
+  } else {
+
+    strengthLabel.textContent =
+      'Senha forte';
+  }
+}
+
+
+/* ============================================================
+   Validação em tempo real
+   ============================================================ */
+
+// Nome
+nomeInput.addEventListener(
+  'input',
+  function() {
+
+    if (
+      nomeInput.value.trim()
+    ) {
+
+      setErro(
+        nomeInput,
+        errNome,
+        false
+      );
+    }
+  }
+);
+
+
+// E-mail
+emailInput.addEventListener(
+  'input',
+  function() {
+
+    const email =
+      emailInput.value.trim();
+
+    if (email) {
+
+      setErro(
+        emailInput,
+        errEmail,
+        !isEmailValido(email)
+      );
+    }
+  }
+);
+
+
+// Senha
+senhaInput.addEventListener(
+  'input',
+  function() {
+
+    atualizarForcaSenha();
+
+    if (
+      senhaInput.value
+    ) {
+
+      setErro(
+        senhaInput,
+        errSenha,
+        senhaInput.value.length < 6
+      );
+    }
+
+    // Verificar confirmação
+    if (
+      confirmaInput.value
+    ) {
+
+      setErro(
+        confirmaInput,
+        errConfirma,
+        confirmaInput.value !==
+        senhaInput.value
+      );
+    }
+  }
+);
+
+
+// Confirmar senha
+confirmaInput.addEventListener(
+  'input',
+  function() {
+
+    if (
+      confirmaInput.value
+    ) {
+
+      setErro(
+        confirmaInput,
+        errConfirma,
+        confirmaInput.value !==
+        senhaInput.value
+      );
+    }
+  }
+);
+
+
+/* ============================================================
+   Cadastro
+   ============================================================ */
+
+btnCadastro.addEventListener(
+  'click',
+  async function() {
+
+    limparToast();
+
+    const nome =
+      nomeInput.value.trim();
+
+    const email =
+      emailInput.value.trim();
+
+    const senha =
+      senhaInput.value;
+
+    const confirma =
+      confirmaInput.value;
+
+
+    /* --------------------------------------------------------
+       Validações
+       -------------------------------------------------------- */
+
+    const nomeOk =
+      nome.length > 0;
+
+    const emailOk =
+      isEmailValido(email);
+
+    const senhaOk =
+      senha.length >= 6;
+
+    const confirmaOk =
+      confirma.length > 0 &&
+      senha === confirma;
+
+
+    setErro(
+      nomeInput,
+      errNome,
+      !nomeOk
+    );
+
+    setErro(
+      emailInput,
+      errEmail,
+      !emailOk
+    );
+
+    setErro(
+      senhaInput,
+      errSenha,
+      !senhaOk
+    );
+
+    setErro(
+      confirmaInput,
+      errConfirma,
+      !confirmaOk
+    );
+
+
+    // Se houver algum erro,
+    // não envia para o backend
+    if (
+      !nomeOk ||
+      !emailOk ||
+      !senhaOk ||
+      !confirmaOk
+    ) {
+
+      mostrarToast(
+        'Verifique os campos destacados.',
+        'error'
+      );
+
+      return;
+    }
+
+
+    /* --------------------------------------------------------
+       Desabilitar botão
+       -------------------------------------------------------- */
+
+    btnCadastro.disabled =
+      true;
+
+    btnCadastro.textContent =
+      'Criando conta...';
+
+
+    try {
+
+      /* ------------------------------------------------------
+         Enviar cadastro para o backend
+         ------------------------------------------------------ */
+
+      const data =
+        await apiRequest(
+          '/auth/register',
+          {
+            method: 'POST',
+
+            body: JSON.stringify({
+              name: nome,
+              email: email,
+              password: senha
+            })
+          }
+        );
+
+
+      /* ------------------------------------------------------
+         Cadastro realizado
+         ------------------------------------------------------ */
+
+      mostrarToast(
+        data.message ||
+        '✓ Conta criada com sucesso!',
+        'success'
+      );
+
+
+      // Limpar campos
+      nomeInput.value =
+        '';
+
+      emailInput.value =
+        '';
+
+      senhaInput.value =
+        '';
+
+      confirmaInput.value =
+        '';
+
+      atualizarForcaSenha();
+
+
+      /* ------------------------------------------------------
+         Ir para login
+         ------------------------------------------------------ */
+
+      setTimeout(
+        function() {
+
+          window.location.href =
+            'login.html';
+
+        },
+        1500
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        'Erro no cadastro:',
+        error
+      );
+
+
+      mostrarToast(
+        error.message ||
+        'Não foi possível criar a conta.',
+        'error'
+      );
+
+
+    } finally {
+
+      // Reativar botão
+      btnCadastro.disabled =
+        false;
+
+      btnCadastro.textContent =
+        'Criar conta';
+    }
+  }
+);
