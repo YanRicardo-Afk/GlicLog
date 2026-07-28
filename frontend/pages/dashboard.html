@@ -28,9 +28,16 @@
       <a href="perfil.html" class="nav-link">Perfil</a>
     </nav>
 
-    <button class="avatar-btn" id="avatarBtn" aria-label="Menu do perfil" aria-expanded="false">
-      <span class="avatar-initials" id="avatarInitials">--</span>
-    </button>
+    <div class="avatar-menu-wrapper">
+      <button class="avatar-btn" id="avatarBtn" aria-label="Menu do perfil" aria-expanded="false">
+        <span class="avatar-initials" id="avatarInitials">--</span>
+      </button>
+
+      <div class="avatar-dropdown" id="avatarDropdown" role="menu">
+        <a href="perfil.html" class="avatar-dropdown-item" role="menuitem">Meu perfil</a>
+        <button type="button" class="avatar-dropdown-item avatar-dropdown-logout" id="logoutBtn" role="menuitem">Sair</button>
+      </div>
+    </div>
   </header>
 
   <main class="dashboard-layout">

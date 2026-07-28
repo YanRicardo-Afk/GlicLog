@@ -109,7 +109,7 @@ async function getGlucoseRecords(req, res) {
                 created_at AS createdAt
             FROM glucose_records
             WHERE user_id = ?
-            ORDER BY measurement_time DESC
+            ORDER BY created_at DESC
             `,
             [userId]
         );

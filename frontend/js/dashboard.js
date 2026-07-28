@@ -226,6 +226,20 @@ function normalizeRegistro(registro) {
             registro.notes ??
             registro.obs ??
             null
+        ),
+
+        /*
+         * IMPORTANTE: precisamos preservar o createdAt,
+         * pois measurementTime é somente um horário (HH:MM:SS),
+         * sem data. Sem o createdAt, getRegistroDate() não
+         * consegue montar uma data válida e todos os registros
+         * acabam virando "Invalid Date" — foi isso que fazia a
+         * média e a variação do dia nunca aparecerem.
+         */
+        createdAt: (
+            registro.createdAt ??
+            registro.created_at ??
+            null
         )
     };
 }
@@ -550,6 +564,57 @@ function renderRecentList(registros) {
 }
 
 /* ============================================================
+Menu do avatar / Logout
+============================================================ */
+
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+}
+
+function initAvatarMenu() {
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdown = document.getElementById('avatarDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (!avatarBtn || !dropdown) {
+        return;
+    }
+
+    function closeDropdown() {
+        dropdown.classList.remove('open');
+        avatarBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleDropdown() {
+        const isOpen = dropdown.classList.toggle('open');
+        avatarBtn.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    avatarBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        toggleDropdown();
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!dropdown.contains(event.target) && event.target !== avatarBtn) {
+            closeDropdown();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeDropdown();
+        }
+    });
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+}
+
+/* ============================================================
 Navegação mobile
 ============================================================ */
 
@@ -646,6 +711,7 @@ async function initDashboard() {
     });
 
     renderMobileNav();
+    initAvatarMenu();
 
     try {
         /*

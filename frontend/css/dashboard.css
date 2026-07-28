@@ -72,6 +72,66 @@
   letter-spacing: 0.5px;
 }
 
+/* ---------- Avatar dropdown ---------- */
+.avatar-menu-wrapper {
+  position: relative;
+}
+
+.avatar-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--white);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(30, 45, 42, 0.12);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  z-index: 200;
+}
+
+.avatar-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.avatar-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.avatar-dropdown-item:hover {
+  background: var(--green-light);
+}
+
+.avatar-dropdown-logout {
+  color: var(--error);
+}
+
+.avatar-dropdown-logout:hover {
+  background: var(--error-bg);
+}
+
 /* ---------- Layout ---------- */
 .dashboard-layout {
   max-width: 680px;
