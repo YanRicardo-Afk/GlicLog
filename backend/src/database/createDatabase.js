@@ -44,39 +44,39 @@ async function createDatabase() {
 
         console.log("Tabela users criada/verificada.");
 
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS glucose_records (
-                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+await connection.query(`
+    CREATE TABLE IF NOT EXISTS glucose_records (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-                user_id INT UNSIGNED NOT NULL,
+        user_id INT UNSIGNED NOT NULL,
 
-                glucose_value DECIMAL(6,2) NOT NULL,
+        glucose_value DECIMAL(6,2) NOT NULL,
 
-                measurement_type VARCHAR(50),
+        measurement_type VARCHAR(50),
 
-                measurement_time DATETIME NOT NULL,
+        measurement_time TIME NOT NULL,
 
-                meal VARCHAR(100),
+        meal VARCHAR(100),
 
-                notes TEXT,
+        notes TEXT,
 
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-                CONSTRAINT fk_glucose_user
-                    FOREIGN KEY (user_id)
-                    REFERENCES users(id)
-                    ON DELETE CASCADE
-                    ON UPDATE CASCADE,
+        CONSTRAINT fk_glucose_user
+            FOREIGN KEY (user_id)
+            REFERENCES users(id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
 
-                INDEX idx_glucose_user (user_id),
+        INDEX idx_glucose_user (user_id),
 
-                INDEX idx_glucose_measurement_time
-                    (measurement_time)
+        INDEX idx_glucose_measurement_time
+            (measurement_time)
 
-            ) ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_ci
-        `);
+    ) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_unicode_ci
+`);
 
         console.log(
             "Tabela glucose_records criada/verificada."

@@ -11,6 +11,9 @@ async function createGlucose(req, res) {
             meal,
             notes
         } = req.body;
+        console.log("BODY RECEBIDO PELO BACKEND:", req.body);
+
+console.log("HORÁRIO RECEBIDO:", measurementTime);
 
         // Validar valor obrigatório
         if (
