@@ -1,6 +1,7 @@
 /* ============================================================
 GlicoLog — historico.js
 Histórico conectado ao backend
+Agora com: filtro por período, editar e excluir registros
 ============================================================ */
 
 /* ============================================================
@@ -9,6 +10,46 @@ Elementos da página
 
 const lista = document.getElementById("historyList");
 const vazio = document.getElementById("empty");
+
+const filtroPeriodo = document.getElementById("filtroPeriodo");
+const filtroMesWrapper = document.getElementById("filtroMesWrapper");
+const filtroMes = document.getElementById("filtroMes");
+const filtroSemanaWrapper = document.getElementById("filtroSemanaWrapper");
+const filtroSemana = document.getElementById("filtroSemana");
+
+const editModalOverlay = document.getElementById("editModalOverlay");
+const editModalClose = document.getElementById("editModalClose");
+const editForm = document.getElementById("editForm");
+const editToast = document.getElementById("editToast");
+const editCancelBtn = document.getElementById("editCancelBtn");
+
+const editIdInput = document.getElementById("editId");
+const editGlicemiaInput = document.getElementById("editGlicemia");
+const editTipoInput = document.getElementById("editTipo");
+const editHoraInput = document.getElementById("editHora");
+const editRefeicaoInput = document.getElementById("editRefeicao");
+const editObsInput = document.getElementById("editObs");
+
+const deleteModalOverlay = document.getElementById("deleteModalOverlay");
+const deleteCancelBtn = document.getElementById("deleteCancelBtn");
+const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
+
+/* ============================================================
+Estado em memória
+============================================================ */
+
+/*
+ * Guardamos todos os registros vindos da API aqui.
+ * Os filtros trabalham em cima dessa cópia, sem
+ * precisar buscar de novo no backend a cada troca.
+ */
+let todosOsRegistros = [];
+
+/*
+ * Guarda o id do registro selecionado
+ * para exclusão (usado pelo modal de confirmação).
+ */
+let idParaExcluir = null;
 
 /* ============================================================
 Status da glicemia
@@ -99,6 +140,27 @@ function formatarTipo(registro) {
 }
 
 /* ============================================================
+Ícones (editar / excluir)
+============================================================ */
+
+const iconeEditar = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+    </svg>
+`;
+
+const iconeExcluir = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+    </svg>
+`;
+
+/* ============================================================
 Criar item do histórico
 ============================================================ */
 
@@ -119,6 +181,7 @@ function criarRegistro(item) {
     const status = obterStatus(valor);
 
     li.className = "history-item";
+    li.dataset.id = item.id;
 
     li.innerHTML = `
         <div class="history-left">
@@ -136,11 +199,22 @@ function criarRegistro(item) {
         </div>
 
         <div class="history-right">
-            <div class="history-date">
-                ${formatarData(item.createdAt)}
+            <div class="history-right-info">
+                <div class="history-date">
+                    ${formatarData(item.createdAt)}
+                </div>
+                <div class="history-status">
+                    ${status.texto}
+                </div>
             </div>
-            <div class="history-status">
-                ${status.texto}
+
+            <div class="history-actions">
+                <button type="button" class="icon-btn edit-btn" data-id="${item.id}" aria-label="Editar registro">
+                    ${iconeEditar}
+                </button>
+                <button type="button" class="icon-btn delete-btn" data-id="${item.id}" aria-label="Excluir registro">
+                    ${iconeExcluir}
+                </button>
             </div>
         </div>
     `;
@@ -154,9 +228,6 @@ Mostrar estado vazio
 
 function mostrarVazio(mensagem = "Nenhuma medição registrada.") {
     if (lista) {
-        /*
-         * Remover registros existentes.
-         */
         const items = lista.querySelectorAll(".history-item");
         items.forEach(function (item) {
             item.remove();
@@ -164,9 +235,6 @@ function mostrarVazio(mensagem = "Nenhuma medição registrada.") {
     }
 
     if (vazio) {
-        /*
-         * Mostrar mensagem.
-         */
         vazio.style.display = "";
         vazio.innerHTML = `
             <span>
@@ -180,13 +248,173 @@ function mostrarVazio(mensagem = "Nenhuma medição registrada.") {
 }
 
 /* ============================================================
+Renderizar lista de registros na tela
+============================================================ */
+
+function renderizarRegistros(registros) {
+    if (registros.length === 0) {
+        mostrarVazio("Nenhuma medição encontrada para o período selecionado.");
+        return;
+    }
+
+    if (vazio) {
+        vazio.style.display = "none";
+    }
+
+    if (lista) {
+        const items = lista.querySelectorAll(".history-item");
+        items.forEach(function (item) {
+            item.remove();
+        });
+    }
+
+    const ordenados = [...registros].sort(function (a, b) {
+        return (
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+        );
+    });
+
+    ordenados.forEach(function (registro) {
+        criarRegistro(registro);
+    });
+}
+
+/* ============================================================
+Utilitários de data para os filtros
+============================================================ */
+
+function obterInicioDaSemana(data) {
+    const d = new Date(data);
+    const dia = d.getDay();
+    const diff = dia === 0 ? -6 : 1 - dia;
+
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+
+    return d;
+}
+
+function obterIntervaloSemanaISO(valorSemana) {
+    const [anoStr, semanaStr] = valorSemana.split("-W");
+
+    const ano = Number(anoStr);
+    const semana = Number(semanaStr);
+
+    const referencia = new Date(ano, 0, 4);
+    const inicioSemana1 = obterInicioDaSemana(referencia);
+
+    const inicio = new Date(inicioSemana1);
+    inicio.setDate(inicio.getDate() + (semana - 1) * 7);
+    inicio.setHours(0, 0, 0, 0);
+
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 6);
+    fim.setHours(23, 59, 59, 999);
+
+    return { inicio, fim };
+}
+
+/* ============================================================
+Aplicar filtro selecionado
+============================================================ */
+
+function aplicarFiltro() {
+    const periodo = filtroPeriodo ? filtroPeriodo.value : "all";
+
+    let filtrados = todosOsRegistros;
+
+    if (periodo === "week") {
+        const inicio = obterInicioDaSemana(new Date());
+        const fim = new Date();
+        fim.setHours(23, 59, 59, 999);
+
+        filtrados = todosOsRegistros.filter(function (registro) {
+            const data = new Date(registro.createdAt);
+            return data >= inicio && data <= fim;
+        });
+
+    } else if (periodo === "month") {
+        const agora = new Date();
+
+        filtrados = todosOsRegistros.filter(function (registro) {
+            const data = new Date(registro.createdAt);
+            return (
+                data.getFullYear() === agora.getFullYear() &&
+                data.getMonth() === agora.getMonth()
+            );
+        });
+
+    } else if (periodo === "custom-month") {
+        const valor = filtroMes ? filtroMes.value : "";
+
+        if (!valor) {
+            filtrados = [];
+        } else {
+            const [ano, mes] = valor.split("-").map(Number);
+
+            filtrados = todosOsRegistros.filter(function (registro) {
+                const data = new Date(registro.createdAt);
+                return (
+                    data.getFullYear() === ano &&
+                    data.getMonth() === mes - 1
+                );
+            });
+        }
+
+    } else if (periodo === "custom-week") {
+        const valor = filtroSemana ? filtroSemana.value : "";
+
+        if (!valor) {
+            filtrados = [];
+        } else {
+            const { inicio, fim } = obterIntervaloSemanaISO(valor);
+
+            filtrados = todosOsRegistros.filter(function (registro) {
+                const data = new Date(registro.createdAt);
+                return data >= inicio && data <= fim;
+            });
+        }
+    }
+
+    renderizarRegistros(filtrados);
+}
+
+/* ============================================================
+Alternar campos de filtro visíveis
+============================================================ */
+
+function atualizarCamposDeFiltro() {
+    const periodo = filtroPeriodo ? filtroPeriodo.value : "all";
+
+    if (filtroMesWrapper) {
+        filtroMesWrapper.hidden = periodo !== "custom-month";
+    }
+
+    if (filtroSemanaWrapper) {
+        filtroSemanaWrapper.hidden = periodo !== "custom-week";
+    }
+
+    aplicarFiltro();
+}
+
+if (filtroPeriodo) {
+    filtroPeriodo.addEventListener("change", atualizarCamposDeFiltro);
+}
+
+if (filtroMes) {
+    filtroMes.addEventListener("change", aplicarFiltro);
+}
+
+if (filtroSemana) {
+    filtroSemana.addEventListener("change", aplicarFiltro);
+}
+
+/* ============================================================
 Carregar histórico
 ============================================================ */
 
 async function carregarHistorico() {
-    /*
-     * Verificar se o usuário está autenticado.
-     */
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -195,81 +423,28 @@ async function carregarHistorico() {
     }
 
     try {
-        /*
-         * Buscar registros do usuário.
-         * O backend já identifica o usuário através do JWT.
-         */
         const data = await apiRequest("/glucose", {
             method: "GET"
         });
 
-        /*
-         * Seu backend atual retorna:
-         * { records: [...] }
-         * Ou em alguns casos diretamente a lista de registros.
-         */
         const registros = Array.isArray(data?.records)
             ? data.records
             : Array.isArray(data)
                 ? data
                 : [];
 
-        /*
-         * Nenhum registro.
-         */
+        todosOsRegistros = registros;
+
         if (registros.length === 0) {
             mostrarVazio();
             return;
         }
 
-        /*
-         * Esconder mensagem de vazio.
-         */
-        if (vazio) {
-            vazio.style.display = "none";
-        }
-
-        /*
-         * Limpar registros antigos.
-         */
-        if (lista) {
-            const items = lista.querySelectorAll(".history-item");
-            items.forEach(function (item) {
-                item.remove();
-            });
-        }
-
-        /*
-         * Ordenar do mais recente para o mais antigo.
-         */
-        registros.sort(function (a, b) {
-            /*
-             * createdAt é a data criada pelo banco.
-             */
-            return (
-                new Date(b.createdAt) -
-                new Date(a.createdAt)
-            );
-        });
-
-        /*
-         * Criar os registros.
-         */
-    registros.forEach(function (registro) {
-    console.log(
-        "REGISTRO RECEBIDO DA API:",
-        JSON.stringify(registro, null, 2)
-    );
-
-    criarRegistro(registro);
-});
+        aplicarFiltro();
 
     } catch (error) {
         console.error("Erro ao carregar histórico:", error);
 
-        /*
-         * Se o token estiver inválido ou expirado, voltar para login.
-         */
         const mensagem = error.message?.toLowerCase() || "";
 
         if (
@@ -284,11 +459,214 @@ async function carregarHistorico() {
             return;
         }
 
-        /*
-         * Mostrar erro na tela.
-         */
         mostrarVazio("Não foi possível carregar seu histórico.");
     }
+}
+
+/* ============================================================
+Editar registro — abrir modal
+============================================================ */
+
+function abrirModalEdicao(id) {
+    const registro = todosOsRegistros.find(function (item) {
+        return String(item.id) === String(id);
+    });
+
+    if (!registro) return;
+
+    editIdInput.value = registro.id;
+    editGlicemiaInput.value = Number(registro.glucoseValue ?? registro.glicemia);
+    editTipoInput.value = registro.measurementType || registro.tipo || "";
+    editHoraInput.value = formatarHora(registro);
+    editRefeicaoInput.value = registro.meal || "";
+    editObsInput.value = registro.notes || "";
+
+    if (editToast) {
+        editToast.className = "toast";
+        editToast.textContent = "";
+    }
+
+    editModalOverlay.hidden = false;
+}
+
+function fecharModalEdicao() {
+    editModalOverlay.hidden = true;
+    editForm.reset();
+}
+
+if (editModalClose) {
+    editModalClose.addEventListener("click", fecharModalEdicao);
+}
+
+if (editCancelBtn) {
+    editCancelBtn.addEventListener("click", fecharModalEdicao);
+}
+
+if (editModalOverlay) {
+    editModalOverlay.addEventListener("click", function (event) {
+        if (event.target === editModalOverlay) {
+            fecharModalEdicao();
+        }
+    });
+}
+
+/* ============================================================
+Editar registro — enviar alterações
+============================================================ */
+
+if (editForm) {
+    editForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const id = editIdInput.value;
+
+        const valor = Number(editGlicemiaInput.value);
+
+        if (!valor || valor < 20 || valor > 600) {
+            editToast.className = "toast error";
+            editToast.textContent = "Informe um valor de glicemia válido.";
+            editGlicemiaInput.focus();
+            return;
+        }
+
+        if (!editHoraInput.value) {
+            editToast.className = "toast error";
+            editToast.textContent = "Informe o horário da medição.";
+            return;
+        }
+
+        const submitButton = editForm.querySelector('button[type="submit"]');
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = "Salvando...";
+        }
+
+        try {
+            await apiRequest(`/glucose/${id}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    glucoseValue: valor,
+                    measurementType: editTipoInput.value || null,
+                    measurementTime: editHoraInput.value,
+                    meal: editRefeicaoInput.value.trim() || null,
+                    notes: editObsInput.value.trim() || null
+                })
+            });
+
+            todosOsRegistros = todosOsRegistros.map(function (registro) {
+                if (String(registro.id) !== String(id)) {
+                    return registro;
+                }
+
+                return {
+                    ...registro,
+                    glucoseValue: valor,
+                    measurementType: editTipoInput.value || null,
+                    measurementTime: editHoraInput.value,
+                    meal: editRefeicaoInput.value.trim() || null,
+                    notes: editObsInput.value.trim() || null
+                };
+            });
+
+            fecharModalEdicao();
+            aplicarFiltro();
+
+        } catch (error) {
+            console.error("Erro ao atualizar registro:", error);
+
+            editToast.className = "toast error";
+            editToast.textContent =
+                error.message || "Não foi possível salvar as alterações.";
+
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = "Salvar Alterações";
+            }
+        }
+    });
+}
+
+/* ============================================================
+Excluir registro — abrir modal de confirmação
+============================================================ */
+
+function abrirModalExclusao(id) {
+    idParaExcluir = id;
+    deleteModalOverlay.hidden = false;
+}
+
+function fecharModalExclusao() {
+    idParaExcluir = null;
+    deleteModalOverlay.hidden = true;
+}
+
+if (deleteCancelBtn) {
+    deleteCancelBtn.addEventListener("click", fecharModalExclusao);
+}
+
+if (deleteModalOverlay) {
+    deleteModalOverlay.addEventListener("click", function (event) {
+        if (event.target === deleteModalOverlay) {
+            fecharModalExclusao();
+        }
+    });
+}
+
+if (deleteConfirmBtn) {
+    deleteConfirmBtn.addEventListener("click", async function () {
+        if (!idParaExcluir) return;
+
+        deleteConfirmBtn.disabled = true;
+        deleteConfirmBtn.textContent = "Excluindo...";
+
+        try {
+            await apiRequest(`/glucose/${idParaExcluir}`, {
+                method: "DELETE"
+            });
+
+            todosOsRegistros = todosOsRegistros.filter(function (registro) {
+                return String(registro.id) !== String(idParaExcluir);
+            });
+
+            fecharModalExclusao();
+
+            if (todosOsRegistros.length === 0) {
+                mostrarVazio();
+            } else {
+                aplicarFiltro();
+            }
+
+        } catch (error) {
+            console.error("Erro ao excluir registro:", error);
+            alert(error.message || "Não foi possível excluir o registro.");
+
+        } finally {
+            deleteConfirmBtn.disabled = false;
+            deleteConfirmBtn.textContent = "Excluir";
+        }
+    });
+}
+
+/* ============================================================
+Delegação de eventos — botões de editar/excluir na lista
+============================================================ */
+
+if (lista) {
+    lista.addEventListener("click", function (event) {
+        const editBtn = event.target.closest(".edit-btn");
+        const deleteBtn = event.target.closest(".delete-btn");
+
+        if (editBtn) {
+            abrirModalEdicao(editBtn.dataset.id);
+            return;
+        }
+
+        if (deleteBtn) {
+            abrirModalExclusao(deleteBtn.dataset.id);
+        }
+    });
 }
 
 /* ============================================================

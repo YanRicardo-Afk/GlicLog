@@ -48,6 +48,29 @@
             <p class="card-sub">Acompanhe seus registros anteriores.</p>
         </div>
 
+        <div class="history-filters">
+            <div class="field filter-field">
+                <label for="filtroPeriodo">Período</label>
+                <select id="filtroPeriodo">
+                    <option value="all">Todos os registros</option>
+                    <option value="week">Esta semana</option>
+                    <option value="month">Este mês</option>
+                    <option value="custom-month">Escolher mês</option>
+                    <option value="custom-week">Escolher semana</option>
+                </select>
+            </div>
+
+            <div class="field filter-field" id="filtroMesWrapper" hidden>
+                <label for="filtroMes">Mês</label>
+                <input type="month" id="filtroMes">
+            </div>
+
+            <div class="field filter-field" id="filtroSemanaWrapper" hidden>
+                <label for="filtroSemana">Semana</label>
+                <input type="week" id="filtroSemana">
+            </div>
+        </div>
+
         <div class="history-container">
             <ul class="history-list" id="historyList">
                 <li class="history-empty" id="empty">
@@ -61,6 +84,74 @@
     <footer class="dashboard-footer">
         GlicoLog — Controle com clareza
     </footer>
+
+    <!-- Modal de edição -->
+    <div class="modal-overlay" id="editModalOverlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 class="card-title">Editar Registro</h2>
+                <button type="button" class="modal-close" id="editModalClose" aria-label="Fechar">&times;</button>
+            </div>
+
+            <div class="toast" id="editToast"></div>
+
+            <form id="editForm">
+                <input type="hidden" id="editId">
+
+                <div class="field">
+                    <label for="editGlicemia">Glicemia (mg/dL)</label>
+                    <input type="number" id="editGlicemia" placeholder="Ex.: 126" required>
+                    <span class="field-error">Informe um valor válido</span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="editTipo">Tipo</label>
+                        <select id="editTipo">
+                            <option value="">Selecionar</option>
+                            <option>Jejum</option>
+                            <option>Pré refeição</option>
+                            <option>Pós refeição</option>
+                            <option>Dormir</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="editHora">Horário</label>
+                        <input type="time" id="editHora" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="editRefeicao">Refeição</label>
+                    <input type="text" id="editRefeicao" placeholder="Opcional">
+                </div>
+
+                <div class="field">
+                    <label for="editObs">Observações</label>
+                    <textarea id="editObs" rows="4" placeholder="Opcional"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="editCancelBtn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação de exclusão -->
+    <div class="modal-overlay" id="deleteModalOverlay" hidden>
+        <div class="modal-card modal-card-small">
+            <h2 class="card-title">Excluir Registro</h2>
+            <p class="card-sub">Tem certeza que deseja excluir este registro? Essa ação não pode ser desfeita.</p>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="deleteCancelBtn">Cancelar</button>
+                <button type="button" class="btn-danger" id="deleteConfirmBtn">Excluir</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/api.js"></script>
     <script src="../js/historico.js"></script>
