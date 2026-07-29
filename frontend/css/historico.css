@@ -1,4 +1,80 @@
 /* ============================================================
+Relatório PDF
+============================================================ */
+
+.history-report-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+}
+
+.report-title {
+    margin: 0 0 4px;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.report-sub {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.report-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-report {
+    padding: 11px 16px;
+    border: none;
+    border-radius: 9px;
+    background: var(--green-primary);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-report:hover {
+    filter: brightness(.94);
+    transform: translateY(-1px);
+}
+
+.btn-report-secondary {
+    border: 1.5px solid var(--green-primary);
+    background: var(--white);
+    color: var(--green-primary);
+}
+
+.btn-report:disabled {
+    opacity: .65;
+    cursor: wait;
+    transform: none;
+}
+
+@media (max-width: 700px) {
+    .history-report-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .report-buttons,
+    .btn-report {
+        width: 100%;
+    }
+}
+
+/* ============================================================
 Filtros
 ============================================================ */
 

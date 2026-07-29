@@ -34,6 +34,9 @@ const deleteModalOverlay = document.getElementById("deleteModalOverlay");
 const deleteCancelBtn = document.getElementById("deleteCancelBtn");
 const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
 
+const downloadWeekPdfBtn = document.getElementById("downloadWeekPdf");
+const downloadMonthPdfBtn = document.getElementById("downloadMonthPdf");
+
 /* ============================================================
 Estado em memória
 ============================================================ */
@@ -667,6 +670,195 @@ if (lista) {
             abrirModalExclusao(deleteBtn.dataset.id);
         }
     });
+}
+
+/* ============================================================
+Gerar relatório PDF
+============================================================ */
+
+function formatarDataConsulta(data) {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const dia = String(data.getDate()).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function obterPeriodoPdf(periodo) {
+    const agora = new Date();
+
+    if (periodo === "week") {
+        /*
+         * Se uma semana personalizada estiver selecionada,
+         * usamos exatamente essa semana no relatório.
+         */
+        if (filtroSemana?.value) {
+            const { inicio, fim } = obterIntervaloSemanaISO(
+                filtroSemana.value
+            );
+
+            return { inicio, fim };
+        }
+
+        const inicio = obterInicioDaSemana(agora);
+        const fim = new Date(inicio);
+
+        fim.setDate(fim.getDate() + 6);
+        fim.setHours(23, 59, 59, 999);
+
+        return { inicio, fim };
+    }
+
+    /*
+     * Se um mês personalizado estiver selecionado,
+     * usamos exatamente esse mês no relatório.
+     */
+    if (filtroMes?.value) {
+        const [ano, mes] = filtroMes.value
+            .split("-")
+            .map(Number);
+
+        const inicio = new Date(ano, mes - 1, 1);
+        const fim = new Date(
+            ano,
+            mes,
+            0,
+            23,
+            59,
+            59,
+            999
+        );
+
+        return { inicio, fim };
+    }
+
+    const inicio = new Date(
+        agora.getFullYear(),
+        agora.getMonth(),
+        1
+    );
+
+    const fim = new Date(
+        agora.getFullYear(),
+        agora.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+    );
+
+    return { inicio, fim };
+}
+
+async function baixarRelatorioPdf(periodo, botao) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const textoOriginal = botao.textContent;
+
+    botao.disabled = true;
+    botao.textContent = "Gerando PDF...";
+
+    try {
+        const { inicio, fim } = obterPeriodoPdf(periodo);
+
+        const parametros = new URLSearchParams({
+            period: periodo,
+            start: formatarDataConsulta(inicio),
+            end: formatarDataConsulta(fim)
+        });
+
+        const response = await fetch(
+            `/api/glucose/report/pdf?${parametros.toString()}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            let mensagem = "Não foi possível gerar o PDF.";
+
+            try {
+                const erro = await response.json();
+                mensagem = erro.message || mensagem;
+            } catch (erroLeitura) {
+                /*
+                 * A resposta de erro pode não ser JSON.
+                 */
+            }
+
+            throw new Error(mensagem);
+        }
+
+        const arquivo = await response.blob();
+        const urlTemporaria = URL.createObjectURL(arquivo);
+        const link = document.createElement("a");
+
+        const contentDisposition =
+            response.headers.get("Content-Disposition") || "";
+
+        const nomeEncontrado = contentDisposition.match(
+            /filename="?([^";]+)"?/i
+        );
+
+        link.href = urlTemporaria;
+        link.download =
+            nomeEncontrado?.[1] ||
+            `gliclog-relatorio-${periodo}.pdf`;
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(urlTemporaria);
+
+    } catch (error) {
+        console.error(
+            "Erro ao baixar relatório:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Não foi possível gerar o relatório PDF."
+        );
+
+    } finally {
+        botao.disabled = false;
+        botao.textContent = textoOriginal;
+    }
+}
+
+if (downloadWeekPdfBtn) {
+    downloadWeekPdfBtn.addEventListener(
+        "click",
+        function () {
+            baixarRelatorioPdf(
+                "week",
+                downloadWeekPdfBtn
+            );
+        }
+    );
+}
+
+if (downloadMonthPdfBtn) {
+    downloadMonthPdfBtn.addEventListener(
+        "click",
+        function () {
+            baixarRelatorioPdf(
+                "month",
+                downloadMonthPdfBtn
+            );
+        }
+    );
 }
 
 /* ============================================================

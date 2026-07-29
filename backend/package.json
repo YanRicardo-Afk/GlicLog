@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "dev": "nodemon src/server.js",
+    "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "db:create": "node src/database/createDatabase.js"
   },
@@ -17,7 +17,9 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.23.2"
+    "mysql2": "^3.23.2",
+    "pdfkit": "^0.17.2",
+    "svg-to-pdfkit": "^0.1.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
