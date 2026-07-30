@@ -1,43 +1,219 @@
-# GlicoLog — Controle com Clareza
-> Projeto de Diário Glicêmico para Monitoramento de Pacientes Diabéticos tipo 1.
+# GlicLog
+
+Sistema web desenvolvido para auxiliar pessoas com Diabetes Mellitus Tipo 1 no registro, acompanhamento e organização de suas medições glicêmicas, oferecendo uma forma simples, segura e acessível de monitorar a saúde diariamente.
 
 ---
 
-## MARCO 4: Implantação & Padrões Web (Qualidade)
+## Objetivo
 
-Este marco apresenta a validação de qualidade estrutural das interfaces do sistema através dos padrões internacionais da W3C, garantindo conformidade técnica, acessibilidade e eliminação de erros de renderização.
-
----
-
-### 1. Relatório de Validação W3C
-
-Submetemos todos os documentos de interface desenvolvidos ao W3C Markup Validation Service (validador oficial de HTML5 e CSS). Abaixo estão documentados todos os mapeamentos, avisos (Warnings) e erros (Errors) sanados para garantir um código limpo, profissional e semanticamente perfeito:
-
-- [x] **dashboard.html**
-  - **Avisos Corrigidos:** Removidas as barras autoconclusivas (/) das tags de elementos vazios (<meta> e <link>), adequando a sintaxe estritamente ao padrão nativo do HTML5.
-  - **Erros Corrigidos:** Sanado erro crítico de acessibilidade na área de status. Foi adicionado o atributo role="status" ao contêiner <div>, permitindo o uso semântico e válido da propriedade aria-label="Status glicêmico" para leitores de ecrã.
-
-- [x] **registro.html**
-  - **Avisos Corrigidos:** Identificados avisos de que elementos <section> não possuíam cabeçalhos declarados ("Section lacks heading"). Os blocos que envolviam o formulário e a introdução da página foram substituídos por tags <div> genéricas de estilização, pois não exigiam títulos redundantes.
-
-- [x] **cadastro.html**
-  - **Avisos Corrigidos:** Limpeza completa da estrutura do documento. Atualização de tags vazias e remoção de fechamentos obsoletos (/>) em caminhos vetoriais do elemento <svg>.
-
-- [x] **login.html**
-  - **Erros Corrigidos:** Corrigido erro estrutural no carregamento do arquivo de estilo externo (<link>). O validador acusou a ausência da propriedade relacional obrigatória; o atributo foi corrigido de class="stylesheet" para rel="stylesheet".
-  - **Avisos Corrigidos:** Padronização das tags de quebra de linha e metadados para omitir barras de encerramento vazias.
-
-- [x] **historico.html**
-  - **Erros Corrigidos:** Correção da árvore de nós da lista dinâmica. O validador acusou uma <div> estrutural solta diretamente sob a tag <ul>. A marcação de lista vazia injetada dinamicamente foi corrigida para habitar exclusivamente dentro de um elemento <li> válido.
-
-- [x] **perfil.html**
-  - **Avisos Corrigidos:** Substituição de múltiplos blocos estruturais de <section> (responsáveis pelos cartões de métricas e agrupamento de botões) por contêineres <div>, zerando os alertas relacionados à ausência de elementos de cabeçalho (h2-h6).
+O GlicLog foi criado com o objetivo de facilitar o acompanhamento diário da glicemia, permitindo que o usuário registre suas medições, consulte o histórico, organize as informações por período e gere relatórios em PDF para acompanhamento médico.
 
 ---
 
-### 2. Restrições Técnicas & Maiores Dificuldades
+## Funcionalidades
 
-Durante o fechamento desta competência de qualidade, as maiores dificuldades técnicas encontradas foram:
+- Cadastro de usuários
+- Login com autenticação JWT
+- Registro de medições glicêmicas
+- Histórico completo das medições
+- Edição de registros
+- Exclusão de registros
+- Filtros por semana
+- Filtros por mês
+- Períodos personalizados
+- Geração de relatório em PDF
+- Interface responsiva
 
-* **Semântica Rígida de Acessibilidade (ARIA):** Alinhar os elementos visuais de feedback instantâneo (como a cor do status glicêmico) com os validadores W3C. Foi necessário compreender como as roles de aplicação mudam a leitura do documento antes de simplesmente aplicar rótulos de acessibilidade.
-* **Aninhamento Restrito de Elementos Dinâmicos:** Adaptar os seletores que recebem renderização via JavaScript (como o histórico de medições vazias) para que a estrutura estática do HTML, antes mesmo do script rodar, cumpra estritamente as regras de hierarquia (ex: garantir que filhos diretos de <ul> sejam apenas <li>).
+---
+
+## Tecnologias Utilizadas
+
+### Front-end
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+
+### Back-end
+
+- Node.js
+- Express.js
+
+### Banco de Dados
+
+- MySQL
+
+### Segurança
+
+- JWT (JSON Web Token)
+- BCrypt
+
+### Geração de Relatórios
+
+- PDFKit
+
+### Ferramentas
+
+- Git
+- GitHub
+- Visual Studio Code
+
+---
+
+## Estrutura do Projeto
+
+```text
+GlicLog/
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── database/
+│   │   ├── middlewares/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── server.js
+│   │
+│   ├── package.json
+│   └── .env
+│
+├── frontend/
+│   ├── assets/
+│   │   ├── css/
+│   │   ├── images/
+│   │   └── js/
+│   │
+│   ├── pages/
+│   └── index.html
+│
+└── README.md
+```
+
+---
+
+## Como executar o projeto
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/YanRicardo-Afk/GlicLog.git
+```
+
+---
+
+### 2. Entre na pasta
+
+```bash
+cd GlicLog
+```
+
+---
+
+### 3. Instale as dependências
+
+```bash
+cd backend
+
+npm install
+```
+
+---
+
+### 4. Configure o arquivo `.env`
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=sua_senha
+DB_NAME=gliclog
+JWT_SECRET=sua_chave
+PORT=3000
+```
+
+---
+
+### 5. Inicie o servidor
+
+```bash
+npm run dev
+```
+
+---
+
+### 6. Abra o Front-end
+
+Abra o arquivo
+
+```
+frontend/index.html
+```
+
+ou utilize uma extensão como **Live Server**.
+
+---
+
+## Banco de Dados
+
+O sistema utiliza MySQL para armazenamento dos dados.
+
+Principais tabelas:
+
+- users
+- glucose_records
+
+---
+
+## API
+
+| Método | Endpoint | Descrição |
+|---------|----------|-----------|
+| POST | /auth/register | Cadastro de usuário |
+| POST | /auth/login | Login |
+| GET | /glucose | Lista medições |
+| POST | /glucose | Nova medição |
+| PUT | /glucose/:id | Atualiza medição |
+| DELETE | /glucose/:id | Remove medição |
+| GET | /glucose/report/pdf | Gera relatório PDF |
+
+---
+
+## Capturas de Tela
+
+### Login
+
+> Inserir imagem
+
+---
+
+### Dashboard
+
+> Inserir imagem
+
+---
+
+### Histórico
+
+> Inserir imagem
+
+---
+
+### Relatório PDF
+
+> Inserir imagem
+
+---
+
+## Melhorias Futuras
+
+- Gráficos estatísticos
+- Lembretes para medições
+- Recuperação de senha
+- Integração com sensores de glicemia
+- Dashboard com indicadores
+
+---
+
+## Autor
+
+Desenvolvido por **Yan Ricardo Silva Pereira** como projeto da disciplina **Desenvolver e organizar elementos estruturais de sites**.
