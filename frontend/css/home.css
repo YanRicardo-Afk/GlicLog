@@ -33,13 +33,20 @@
 
 html{ scroll-behavior: smooth; }
 
+html, body{ overflow-x: hidden; }
+
 body{
   margin: 0;
   font-family: var(--font-base);
   color: var(--ink);
-  background: var(--white);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+
+  /* leve grade de pontos, como papel de gráfico — referência sutil
+     ao acompanhamento de medições, evita o fundo 100% liso */
+  background-color: var(--white);
+  background-image: radial-gradient(circle, rgba(61,139,110,0.10) 1.2px, transparent 1.2px);
+  background-size: 26px 26px;
 }
 
 h1, h2, h3{
@@ -257,11 +264,27 @@ section{ padding: 88px 0; }
    Hero
 ------------------------------------------------- */
 .hero{
+  position: relative;
+  overflow: hidden;
   padding: 72px 0 96px;
   background: linear-gradient(180deg, var(--green-light) 0%, var(--white) 78%);
 }
 
+.hero::before{
+  content: "";
+  position: absolute;
+  top: -160px;
+  right: -140px;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(107,174,149,0.35) 0%, rgba(107,174,149,0) 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
 .hero-inner{
+  position: relative;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 56px;
@@ -381,7 +404,11 @@ section{ padding: 88px 0; }
 /* -------------------------------------------------
    Filosofia
 ------------------------------------------------- */
-.philosophy{ background: var(--white); }
+.philosophy{
+  position: relative;
+  background:
+    radial-gradient(520px 260px at 88% 0%, rgba(61,139,110,0.06), transparent 70%);
+}
 
 .philosophy-grid{
   display: grid;
@@ -469,7 +496,9 @@ section{ padding: 88px 0; }
    CTA final
 ------------------------------------------------- */
 .final-cta{
-  background: var(--green-primary);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--green-primary) 0%, var(--green-dark) 100%);
   text-align: center;
 }
 .final-cta h2{ color: var(--white); }
@@ -527,41 +556,92 @@ section{ padding: 88px 0; }
 
 /* -------------------------------------------------
    Responsivo
+   Passos: 1080 (grades 2 col + nav mais compacta)
+           900  (menu vira hambúrguer, textos menores)
+           600  (tudo em coluna única)
+           420  (ajustes finos de telas bem pequenas)
 ------------------------------------------------- */
-@media (max-width: 980px){
-  .hero-inner{ grid-template-columns: 1fr; }
-  .hero-visual{ order: -1; }
+
+/* nav um pouco mais enxuta antes de virar hambúrguer,
+   evita que 4 links + 2 botões apertem no cabeçalho */
+@media (max-width: 1080px){
+  .main-nav{ gap: 18px; }
+  .main-nav a{ font-size: 0.9rem; }
+  .header-actions{ gap: 8px; }
+}
+
+@media (max-width: 1000px){
+  .hero-inner{ grid-template-columns: 1fr; gap: 44px; }
+  .mock-card{ margin: 0 auto; }
+  .hero-copy{ text-align: center; }
+  .hero-copy .hero-sub{ margin-left: auto; margin-right: auto; }
+  .hero-cta{ justify-content: center; }
+
   .philosophy-grid{ grid-template-columns: 1fr 1fr; }
   .features-grid{ grid-template-columns: 1fr 1fr; }
   .a11y-grid{ grid-template-columns: 1fr 1fr; }
-  .security-inner{ grid-template-columns: 1fr; }
+  .security-inner{ grid-template-columns: 1fr; gap: 32px; }
 }
 
-@media (max-width: 720px){
-  section{ padding: 64px 0; }
+/* menu vira hambúrguer a partir daqui: dá espaço de sobra
+   em tablets, onde nav + botões inline ficavam espremidos */
+@media (max-width: 900px){
+  .wrap{ padding: 0 20px; }
 
   .main-nav{
     position: absolute;
-    top: 76px;
+    top: 72px;
     left: 0;
     right: 0;
     background: var(--white);
     border-bottom: 1px solid var(--line);
     flex-direction: column;
     gap: 0;
-    padding: 8px 24px 18px;
+    padding: 8px 20px 18px;
     display: none;
+    box-shadow: 0 12px 20px -14px rgba(42,99,80,0.25);
   }
   .main-nav.is-open{ display: flex; }
-  .main-nav a{ padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .main-nav a{ font-size: 1rem; padding: 13px 0; border-bottom: 1px solid var(--line); }
 
   .header-actions .btn-ghost{ display: none; }
   .nav-toggle{ display: flex; }
+  .header-inner{ height: 68px; }
+}
+
+@media (max-width: 600px){
+  section{ padding: 56px 0; }
+  .wrap{ padding: 0 18px; }
+
+  h1{ font-size: 2rem; }
+  .section-head h2{ font-size: 1.5rem; }
+  .section-head{ margin-bottom: 34px; }
+
+  .hero{ padding: 44px 0 64px; }
+  .hero-cta{ flex-direction: column; align-items: stretch; }
+  .hero-cta .btn{ width: 100%; }
+  .hero-cta .btn-text{ text-align: center; }
+
+  .mock-card{ max-width: 100%; padding: 22px 20px 18px; }
+  .mock-reading-value{ font-size: 2.8rem; }
 
   .philosophy-grid{ grid-template-columns: 1fr; }
   .features-grid{ grid-template-columns: 1fr; }
   .a11y-grid{ grid-template-columns: 1fr; }
+  .a11y-item{ padding: 18px 0; }
 
-  .footer-inner{ flex-direction: column; align-items: flex-start; }
-  .footer-nav{ margin-left: 0; flex-wrap: wrap; }
+  .security-list li{ padding-left: 26px; }
+
+  .final-cta .btn{ width: 100%; max-width: 320px; }
+
+  .footer-inner{ flex-direction: column; align-items: flex-start; gap: 16px; }
+  .footer-nav{ margin-left: 0; flex-wrap: wrap; gap: 14px 20px; }
+}
+
+@media (max-width: 420px){
+  .wrap{ padding: 0 16px; }
+  h1{ font-size: 1.7rem; }
+  .logo-text{ font-size: 1.02rem; }
+  .btn-lg{ padding: 14px 22px; font-size: 0.94rem; }
+  .mock-reading-value{ font-size: 2.4rem; }
 }
