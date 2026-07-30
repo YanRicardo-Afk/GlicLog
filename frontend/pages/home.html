@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlicLog — Seu diário glicêmico digital</title>
+<meta name="description" content="O GlicLog troca o caderno de papel por um histórico de glicemia organizado, acessível e sempre à mão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- ============================================= -->
+<!-- CABEÇALHO -->
+<!-- ============================================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+
+    <a href="#topo" class="logo" aria-label="GlicLog — página inicial">
+      <!--
+        LOGO: troque o bloco abaixo por:
+        <img src="assets/logo.svg" alt="GlicLog" class="logo-img">
+      -->
+      <div class="logo-placeholder" data-placeholder="logo">
+        <span>Logo</span>
+      </div>
+      <span class="logo-text">GlicLog</span>
+    </a>
+
+    <nav class="main-nav" id="main-nav">
+      <a href="#sobre">Como funciona</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#acessibilidade">Acessibilidade</a>
+      <a href="#seguranca">Segurança</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-ghost">Entrar</a>
+      <a href="cadastro.html" class="btn btn-primary">Criar conta</a>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <!-- ============================================= -->
+  <!-- HERO -->
+  <!-- ============================================= -->
+  <section class="hero" id="topo">
+    <div class="wrap hero-inner">
+
+      <div class="hero-copy">
+        <p class="eyebrow">Diário glicêmico digital</p>
+        <h1>Sua glicemia, registrada&nbsp;em segundos. <span>Sua evolução, visível em qualquer tela.</span></h1>
+        <p class="hero-sub">O GlicLog troca o caderno de papel por um histórico organizado, acessível e sempre à mão — no computador ou no celular.</p>
+        <div class="hero-cta">
+          <a href="#comecar" class="btn btn-primary btn-lg">Criar conta grátis</a>
+          <a href="#sobre" class="btn btn-text">Ver como funciona ↓</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mock-card">
+          <div class="mock-card-head">
+            <span class="mock-dot"></span>
+            <span class="mock-card-title">Última medição</span>
+          </div>
+
+          <div class="mock-reading">
+            <span class="mock-reading-value" id="glucose-value">98</span>
+            <span class="mock-reading-unit">mg/dL</span>
+          </div>
+          <span class="mock-badge" id="glucose-badge">Dentro da meta</span>
+
+          <svg class="mock-chart" viewBox="0 0 320 100" preserveAspectRatio="none">
+            <polyline id="mock-chart-line" points="0,70 40,55 80,60 120,30 160,45 200,25 240,40 280,20 320,35" />
+          </svg>
+
+          <div class="mock-card-foot">
+            <span>12 registros hoje</span>
+            <span class="mock-time">14:32</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- FILOSOFIA / SOBRE -->
+  <!-- ============================================= -->
+  <section class="philosophy" id="sobre">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Como funciona</p>
+        <h2>Feito para caber no seu dia a dia</h2>
+        <p class="section-sub">Mais do que guardar números, o GlicLog acompanha sua rotina — sem complicar.</p>
+      </div>
+
+      <div class="philosophy-grid">
+        <article class="philosophy-card">
+          <h3>Simplicidade</h3>
+          <p>Registrar uma medição leva poucos toques. Sem passos extras, sem telas confusas.</p>
+        </article>
+        <article class="philosophy-card">
+          <h3>Acessibilidade</h3>
+          <p>Pensado para funcionar bem com leitor de tela, teclado, fonte grande ou alto contraste.</p>
+        </article>
+        <article class="philosophy-card">
+          <h3>Evolução contínua</h3>
+          <p>O GlicLog continua ganhando recursos novos, mantendo o que já funciona bem pra você.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- RECURSOS / FUNCIONALIDADES -->
+  <!-- ============================================= -->
+  <section class="features" id="recursos">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Recursos</p>
+        <h2>Tudo o que você precisa, em um só lugar</h2>
+        <p class="section-sub">Quatro telas simples cobrem toda a sua rotina de acompanhamento.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <article class="feature-card">
+          <!-- SCREENSHOT: troque por <img src="assets/screenshot-dashboard.png" alt="Tela do Dashboard do GlicLog"> -->
+          <div class="media-placeholder" data-placeholder="screenshot-dashboard">
+            <span>Screenshot · Dashboard</span>
+          </div>
+          <h3>Dashboard</h3>
+          <p>Veja sua última medição, um resumo do dia e atalhos para o que você mais usa — tudo em uma tela.</p>
+        </article>
+
+        <article class="feature-card">
+          <!-- SCREENSHOT: troque por <img src="assets/screenshot-registro.png" alt="Tela de registro de glicemia do GlicLog"> -->
+          <div class="media-placeholder" data-placeholder="screenshot-registro">
+            <span>Screenshot · Registro</span>
+          </div>
+          <h3>Registro de glicemia</h3>
+          <p>Informe valor, data, horário e observações em poucos toques. Fica salvo automaticamente.</p>
+        </article>
+
+        <article class="feature-card">
+          <!-- SCREENSHOT: troque por <img src="assets/screenshot-historico.png" alt="Tela de histórico do GlicLog"> -->
+          <div class="media-placeholder" data-placeholder="screenshot-historico">
+            <span>Screenshot · Histórico</span>
+          </div>
+          <h3>Histórico</h3>
+          <p>Consulte todas as suas medições anteriores, organizadas e fáceis de encontrar.</p>
+        </article>
+
+        <article class="feature-card">
+          <!-- SCREENSHOT: troque por <img src="assets/screenshot-perfil.png" alt="Tela de perfil do GlicLog"> -->
+          <div class="media-placeholder" data-placeholder="screenshot-perfil">
+            <span>Screenshot · Perfil</span>
+          </div>
+          <h3>Perfil</h3>
+          <p>Veja e atualize seus dados pessoais sempre que precisar.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- ACESSIBILIDADE -->
+  <!-- ============================================= -->
+  <section class="accessibility" id="acessibilidade">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Acessibilidade</p>
+        <h2>Do jeito que for melhor pra você</h2>
+        <p class="section-sub">O GlicLog se adapta a diferentes formas de enxergar e navegar — não o contrário.</p>
+      </div>
+
+      <div class="a11y-grid">
+        <div class="a11y-item">
+          <h3>Alto contraste</h3>
+          <p>Aumenta a distinção entre textos e ícones para uma leitura mais clara.</p>
+        </div>
+        <div class="a11y-item">
+          <h3>Tamanho da fonte</h3>
+          <p>Aumente ou diminua o texto sem perder a organização da tela.</p>
+        </div>
+        <div class="a11y-item">
+          <h3>Navegação por teclado</h3>
+          <p>Use Tab e Enter para percorrer toda a aplicação, sem precisar do mouse.</p>
+        </div>
+        <div class="a11y-item">
+          <h3>Leitor de tela</h3>
+          <p>Compatível com tecnologias assistivas, com labels e mensagens de erro claras.</p>
+        </div>
+        <div class="a11y-item">
+          <h3>Tema claro, escuro ou automático</h3>
+          <p>Escolha o visual que combina com você, ou deixe o GlicLog seguir o tema do seu aparelho.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- SEGURANÇA -->
+  <!-- ============================================= -->
+  <section class="security" id="seguranca">
+    <div class="wrap security-inner">
+      <div class="security-copy">
+        <p class="eyebrow">Segurança</p>
+        <h2>Seus dados, só seus</h2>
+        <p>Seu login é protegido e suas informações ficam salvas com segurança. Ninguém mais tem acesso ao seu histórico de glicemia.</p>
+      </div>
+      <ul class="security-list">
+        <li>Login protegido por autenticação segura</li>
+        <li>Senhas armazenadas de forma criptografada</li>
+        <li>Suas rotas e dados pessoais ficam privados</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- CTA FINAL -->
+  <!-- ============================================= -->
+  <section class="final-cta" id="comecar">
+    <div class="wrap final-cta-inner">
+      <h2>Comece a acompanhar sua glicemia hoje</h2>
+      <p>Leva menos de um minuto para criar sua conta.</p>
+      <a href="#" class="btn btn-primary btn-lg">Criar conta grátis</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================= -->
+<!-- RODAPÉ -->
+<!-- ============================================= -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+
+    <a href="#topo" class="logo" aria-label="GlicLog — página inicial">
+      <!--
+        LOGO: troque o bloco abaixo por:
+        <img src="assets/logo.svg" alt="GlicLog" class="logo-img">
+      -->
+      <div class="logo-placeholder" data-placeholder="logo-footer">
+        <span>Logo</span>
+      </div>
+      <span class="logo-text">GlicLog</span>
+    </a>
+
+    <nav class="footer-nav">
+      <a href="#sobre">Como funciona</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#acessibilidade">Acessibilidade</a>
+      <a href="#seguranca">Segurança</a>
+    </nav>
+
+    <p class="footer-copy">© 2026 GlicLog. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<script src="../js/home.js"></script>
+</body>
+</html>
