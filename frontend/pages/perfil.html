@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>GlicoLog — Histórico</title>
+    <title>GlicoLog — Perfil</title>
 
     <link rel="stylesheet" href="../css/styleLogin.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/historico.css">
+    <link rel="stylesheet" href="../css/perfil.css">
     <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="../css/accessibility.css">
 
+    <!-- Executados no head para aplicar preferências antes da página aparecer. -->
     <script src="../js/theme.js"></script>
     <script src="../js/accessibility.js"></script>
 </head>
@@ -30,8 +31,8 @@
 
         <nav class="topbar-nav" aria-label="Navegação principal">
             <a href="dashboard.html" class="nav-link">Início</a>
-            <a href="historico.html" class="nav-link active" aria-current="page">Histórico</a>
-            <a href="perfil.html" class="nav-link">Perfil</a>
+            <a href="historico.html" class="nav-link">Histórico</a>
+            <a href="perfil.html" class="nav-link active" aria-current="page">Perfil</a>
         </nav>
     </header>
 
@@ -48,63 +49,143 @@
     </div>
 
     <main class="dashboard-layout">
-        <div class="history-header">
-            <h1 class="card-title">Histórico de Medições</h1>
-            <p class="card-sub">Acompanhe seus registros anteriores.</p>
+        <section class="profile-header" aria-labelledby="profileName">
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true">—</div>
+            <h1 class="profile-name" id="profileName">Carregando...</h1>
+            <p class="profile-email" id="profileEmail">—</p>
+        </section>
+
+        <div class="profile-grid" aria-label="Resumo do perfil">
+            <div class="summary-card">
+                <span class="summary-value" id="countRegister">0</span>
+                <span class="summary-label">Registros</span>
+            </div>
+
+            <div class="summary-card">
+                <span class="summary-value" id="avgRegister">—</span>
+                <span class="summary-label">Média</span>
+            </div>
+
+            <div class="summary-card">
+                <span class="summary-value">T1D</span>
+                <span class="summary-label">Tipo</span>
+            </div>
         </div>
 
-        <section class="history-report-actions" aria-labelledby="reportTitle">
-            <div>
-                <h2 class="report-title" id="reportTitle">Relatório glicêmico</h2>
-                <p class="report-sub">Selecione o mês desejado e baixe o relatório em PDF.</p>
+        <section class="accessibility-card" aria-labelledby="accessibilityTitle">
+            <div class="accessibility-header">
+                <h2 class="accessibility-title" id="accessibilityTitle">
+                    Aparência e acessibilidade
+                </h2>
+
+                <p class="accessibility-subtitle">
+                    Escolha como o GlicoLog deve aparecer neste dispositivo.
+                </p>
             </div>
 
-            <div class="report-buttons">
-                <div class="field filter-field report-month-field">
-                    <label for="reportMonth">Mês do relatório</label>
-                    <input type="month" id="reportMonth">
+            <fieldset class="setting-group">
+                <legend class="setting-legend">Tema</legend>
+
+                <div class="theme-options">
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="light">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">☀</span>
+                            <span class="theme-option-label">Claro</span>
+                        </span>
+                    </label>
+
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="dark">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">☾</span>
+                            <span class="theme-option-label">Escuro</span>
+                        </span>
+                    </label>
+
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="system">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">◐</span>
+                            <span class="theme-option-label">Seguir sistema</span>
+                        </span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="setting-divider" aria-hidden="true"></div>
+
+            <fieldset class="setting-group">
+                <legend class="setting-legend">Tamanho da fonte</legend>
+
+                <p class="setting-description" id="fontSizeDescription">
+                    Ajuste o tamanho dos textos e elementos da interface.
+                </p>
+
+                <div class="font-size-options" aria-describedby="fontSizeDescription">
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="small">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-small" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Pequena</span>
+                        </span>
+                    </label>
+
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="normal">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-normal" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Normal</span>
+                        </span>
+                    </label>
+
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="large">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-large" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Grande</span>
+                        </span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="setting-divider" aria-hidden="true"></div>
+
+            <div class="setting-row">
+                <div class="setting-row-text">
+                    <span class="setting-row-title" id="highContrastTitle">
+                        Alto contraste
+                    </span>
+
+                    <span class="setting-description" id="highContrastDescription">
+                        Reforça cores, bordas e foco para facilitar a leitura.
+                    </span>
                 </div>
 
-                <button type="button" class="btn-report" id="downloadWeekPdf">
-                    Baixar semana atual em PDF
-                </button>
+                <label class="switch-control">
+                    <input
+                        type="checkbox"
+                        id="highContrastPreference"
+                        aria-labelledby="highContrastTitle"
+                        aria-describedby="highContrastDescription"
+                    >
 
-                <button type="button" class="btn-report btn-report-secondary" id="downloadMonthPdf">
-                    Baixar mês selecionado em PDF
-                </button>
+                    <span class="switch-track" aria-hidden="true">
+                        <span class="switch-thumb"></span>
+                    </span>
+
+                    <span class="switch-state" id="highContrastState">
+                        Desativado
+                    </span>
+                </label>
             </div>
+
+            <p class="sr-only" id="accessibilityStatus" role="status" aria-live="polite"></p>
         </section>
 
-        <section class="history-filters" aria-label="Filtros do histórico">
-            <div class="field filter-field">
-                <label for="filtroPeriodo">Período</label>
-                <select id="filtroPeriodo">
-                    <option value="all">Todos os registros</option>
-                    <option value="week">Esta semana</option>
-                    <option value="month">Este mês</option>
-                    <option value="custom-month">Escolher mês</option>
-                    <option value="custom-week">Escolher semana</option>
-                </select>
-            </div>
-
-            <div class="field filter-field" id="filtroMesWrapper" hidden>
-                <label for="filtroMes">Mês</label>
-                <input type="month" id="filtroMes">
-            </div>
-
-            <div class="field filter-field" id="filtroSemanaWrapper" hidden>
-                <label for="filtroSemana">Semana</label>
-                <input type="week" id="filtroSemana">
-            </div>
-        </section>
-
-        <div class="history-container">
-            <ul class="history-list" id="historyList" aria-live="polite">
-                <li class="history-empty" id="empty">
-                    Nenhuma medição registrada.
-                    <a href="registro.html">Criar primeiro registro</a>
-                </li>
-            </ul>
+        <div class="profile-actions">
+            <button type="button" class="btn-secondary">Editar Perfil</button>
+            <button type="button" class="btn-danger" id="logoutBtn">Sair</button>
         </div>
     </main>
 
@@ -112,119 +193,8 @@
         GlicoLog — Controle com clareza
     </footer>
 
-    <!-- Modal de edição -->
-    <div class="modal-overlay" id="editModalOverlay" hidden>
-        <div
-            class="modal-card"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="editModalTitle"
-            tabindex="-1"
-        >
-            <div class="modal-header">
-                <h2 class="card-title" id="editModalTitle">Editar Registro</h2>
-                <button
-                    type="button"
-                    class="modal-close"
-                    id="editModalClose"
-                    aria-label="Fechar modal de edição"
-                >
-                    &times;
-                </button>
-            </div>
-
-            <div class="toast" id="editToast" role="status" aria-live="polite"></div>
-
-            <form id="editForm">
-                <input type="hidden" id="editId">
-
-                <div class="field">
-                    <label for="editGlicemia">Glicemia (mg/dL)</label>
-                    <input
-                        type="number"
-                        id="editGlicemia"
-                        min="20"
-                        max="600"
-                        inputmode="numeric"
-                        placeholder="Ex.: 126"
-                        required
-                    >
-                    <span class="field-error">Informe um valor válido</span>
-                </div>
-
-                <div class="row-2">
-                    <div class="field">
-                        <label for="editTipo">Tipo</label>
-                        <select id="editTipo">
-                            <option value="">Selecionar</option>
-                            <option>Jejum</option>
-                            <option>Pré refeição</option>
-                            <option>Pós refeição</option>
-                            <option>Dormir</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="editHora">Horário</label>
-                        <input type="time" id="editHora" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="editRefeicao">Refeição</label>
-                    <input type="text" id="editRefeicao" placeholder="Opcional">
-                </div>
-
-                <div class="field">
-                    <label for="editObs">Observações</label>
-                    <textarea
-                        id="editObs"
-                        rows="4"
-                        maxlength="500"
-                        placeholder="Opcional"
-                    ></textarea>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" id="editCancelBtn">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        Salvar Alterações
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de confirmação de exclusão -->
-    <div class="modal-overlay" id="deleteModalOverlay" hidden>
-        <div
-            class="modal-card modal-card-small"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="deleteModalTitle"
-            aria-describedby="deleteModalDescription"
-            tabindex="-1"
-        >
-            <h2 class="card-title" id="deleteModalTitle">Excluir Registro</h2>
-            <p class="card-sub" id="deleteModalDescription">
-                Tem certeza que deseja excluir este registro? Essa ação não pode ser desfeita.
-            </p>
-
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" id="deleteCancelBtn">
-                    Cancelar
-                </button>
-                <button type="button" class="btn-danger" id="deleteConfirmBtn">
-                    Excluir
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script src="../js/api.js"></script>
-    <script src="../js/historico.js"></script>
+    <script src="../js/perfil.js"></script>
 
 </body>
 </html>

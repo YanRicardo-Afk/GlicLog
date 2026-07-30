@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/historico.css">
     <link rel="stylesheet" href="../css/theme.css">
-    <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../css/accessibility.css">
+
+    <script src="../js/theme.js"></script>
     <script src="../js/accessibility.js"></script>
 </head>
 
@@ -20,16 +21,16 @@
     <header class="topbar">
         <div class="topbar-brand">
             <div class="brand-icon">
-                <svg viewBox="0 0 24 24">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"></path>
                 </svg>
             </div>
             <span class="brand-name">GlicoLog</span>
         </div>
 
-        <nav class="topbar-nav">
+        <nav class="topbar-nav" aria-label="Navegação principal">
             <a href="dashboard.html" class="nav-link">Início</a>
-            <a href="historico.html" class="nav-link active">Histórico</a>
+            <a href="historico.html" class="nav-link active" aria-current="page">Histórico</a>
             <a href="perfil.html" class="nav-link">Perfil</a>
         </nav>
     </header>
@@ -52,9 +53,9 @@
             <p class="card-sub">Acompanhe seus registros anteriores.</p>
         </div>
 
-        <div class="history-report-actions">
+        <section class="history-report-actions" aria-labelledby="reportTitle">
             <div>
-                <h2 class="report-title">Relatório glicêmico</h2>
+                <h2 class="report-title" id="reportTitle">Relatório glicêmico</h2>
                 <p class="report-sub">Selecione o mês desejado e baixe o relatório em PDF.</p>
             </div>
 
@@ -72,9 +73,9 @@
                     Baixar mês selecionado em PDF
                 </button>
             </div>
-        </div>
+        </section>
 
-        <div class="history-filters">
+        <section class="history-filters" aria-label="Filtros do histórico">
             <div class="field filter-field">
                 <label for="filtroPeriodo">Período</label>
                 <select id="filtroPeriodo">
@@ -95,10 +96,10 @@
                 <label for="filtroSemana">Semana</label>
                 <input type="week" id="filtroSemana">
             </div>
-        </div>
+        </section>
 
         <div class="history-container">
-            <ul class="history-list" id="historyList">
+            <ul class="history-list" id="historyList" aria-live="polite">
                 <li class="history-empty" id="empty">
                     Nenhuma medição registrada.
                     <a href="registro.html">Criar primeiro registro</a>
@@ -113,20 +114,41 @@
 
     <!-- Modal de edição -->
     <div class="modal-overlay" id="editModalOverlay" hidden>
-        <div class="modal-card">
+        <div
+            class="modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="editModalTitle"
+            tabindex="-1"
+        >
             <div class="modal-header">
-                <h2 class="card-title">Editar Registro</h2>
-                <button type="button" class="modal-close" id="editModalClose" aria-label="Fechar">&times;</button>
+                <h2 class="card-title" id="editModalTitle">Editar Registro</h2>
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="editModalClose"
+                    aria-label="Fechar modal de edição"
+                >
+                    &times;
+                </button>
             </div>
 
-            <div class="toast" id="editToast"></div>
+            <div class="toast" id="editToast" role="status" aria-live="polite"></div>
 
             <form id="editForm">
                 <input type="hidden" id="editId">
 
                 <div class="field">
                     <label for="editGlicemia">Glicemia (mg/dL)</label>
-                    <input type="number" id="editGlicemia" placeholder="Ex.: 126" required>
+                    <input
+                        type="number"
+                        id="editGlicemia"
+                        min="20"
+                        max="600"
+                        inputmode="numeric"
+                        placeholder="Ex.: 126"
+                        required
+                    >
                     <span class="field-error">Informe um valor válido</span>
                 </div>
 
@@ -155,12 +177,21 @@
 
                 <div class="field">
                     <label for="editObs">Observações</label>
-                    <textarea id="editObs" rows="4" placeholder="Opcional"></textarea>
+                    <textarea
+                        id="editObs"
+                        rows="4"
+                        maxlength="500"
+                        placeholder="Opcional"
+                    ></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" id="editCancelBtn">Cancelar</button>
-                    <button type="submit" class="btn-primary">Salvar Alterações</button>
+                    <button type="button" class="btn-secondary" id="editCancelBtn">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Salvar Alterações
+                    </button>
                 </div>
             </form>
         </div>
@@ -168,13 +199,26 @@
 
     <!-- Modal de confirmação de exclusão -->
     <div class="modal-overlay" id="deleteModalOverlay" hidden>
-        <div class="modal-card modal-card-small">
-            <h2 class="card-title">Excluir Registro</h2>
-            <p class="card-sub">Tem certeza que deseja excluir este registro? Essa ação não pode ser desfeita.</p>
+        <div
+            class="modal-card modal-card-small"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="deleteModalTitle"
+            aria-describedby="deleteModalDescription"
+            tabindex="-1"
+        >
+            <h2 class="card-title" id="deleteModalTitle">Excluir Registro</h2>
+            <p class="card-sub" id="deleteModalDescription">
+                Tem certeza que deseja excluir este registro? Essa ação não pode ser desfeita.
+            </p>
 
             <div class="modal-actions">
-                <button type="button" class="btn-secondary" id="deleteCancelBtn">Cancelar</button>
-                <button type="button" class="btn-danger" id="deleteConfirmBtn">Excluir</button>
+                <button type="button" class="btn-secondary" id="deleteCancelBtn">
+                    Cancelar
+                </button>
+                <button type="button" class="btn-danger" id="deleteConfirmBtn">
+                    Excluir
+                </button>
             </div>
         </div>
     </div>
