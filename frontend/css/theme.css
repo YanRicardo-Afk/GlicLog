@@ -1,0 +1,172 @@
+/* ============================================================
+   GlicoLog — theme.css
+   Temas globais: claro, escuro e preferência do sistema
+   Carregue este arquivo depois dos demais arquivos CSS.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  --surface-primary: #FFFFFF;
+  --surface-secondary: #F5FAF8;
+  --surface-elevated: #FFFFFF;
+  --surface-hover: #EEF8F4;
+  --overlay-bg: rgba(20, 40, 34, 0.45);
+
+  --shadow-soft: 0 10px 30px rgba(30, 45, 42, 0.12);
+  --shadow-modal: 0 20px 50px rgba(20, 40, 34, 0.25);
+
+  --focus-ring: rgba(61, 139, 110, 0.22);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --green-primary: #62C6A1;
+  --green-light: #183A31;
+  --green-mid: #4FA989;
+  --green-dark: #8ADDBE;
+
+  --text-dark: #EDF7F3;
+  --text-mid: #C3D8D0;
+  --text-muted: #93ADA4;
+  --border-soft: #315048;
+
+  --white: #17251F;
+  --bg-page: #0F1915;
+
+  --error: #FF8B7D;
+  --error-bg: #3A211F;
+  --success: #7DDBB7;
+
+  --surface-primary: #17251F;
+  --surface-secondary: #0F1915;
+  --surface-elevated: #1B2C25;
+  --surface-hover: #22372F;
+  --overlay-bg: rgba(0, 0, 0, 0.68);
+
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.32);
+  --shadow-modal: 0 20px 50px rgba(0, 0, 0, 0.52);
+
+  --focus-ring: rgba(98, 198, 161, 0.28);
+}
+
+html,
+body {
+  background: var(--bg-page);
+  color: var(--text-dark);
+}
+
+body,
+.topbar,
+.header-minimal,
+.card,
+.action-card,
+.summary-card,
+.recent-list,
+.history-report-actions,
+.history-item,
+.history-empty,
+.modal-card,
+.mobile-nav,
+.avatar-dropdown,
+input,
+select,
+textarea,
+button {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input,
+select,
+textarea {
+  background-color: var(--white);
+  color: var(--text-dark);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.modal-overlay {
+  background: var(--overlay-bg);
+}
+
+.modal-card {
+  box-shadow: var(--shadow-modal);
+}
+
+.avatar-dropdown {
+  box-shadow: var(--shadow-soft);
+}
+
+html[data-theme="dark"] .last-reading-card {
+  background: #286B56;
+}
+
+html[data-theme="dark"] .action-card.action-primary {
+  background: #183A31;
+  border-color: #4FA989;
+}
+
+html[data-theme="dark"] .action-card.action-primary .action-icon {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .recent-item:hover,
+html[data-theme="dark"] .icon-btn:hover,
+html[data-theme="dark"] .btn-secondary:hover {
+  background: var(--surface-hover);
+}
+
+html[data-theme="dark"] .btn-report-secondary,
+html[data-theme="dark"] .btn-secondary,
+html[data-theme="dark"] .icon-btn {
+  background: var(--surface-elevated);
+}
+
+html[data-theme="dark"] .brand-icon svg,
+html[data-theme="dark"] .profile-avatar {
+  color: #FFFFFF;
+}
+
+html[data-theme="dark"] .history-dot.low,
+html[data-theme="dark"] .recent-dot.low {
+  background: #FFB85C;
+}
+
+html[data-theme="dark"] .history-dot.normal,
+html[data-theme="dark"] .recent-dot.normal {
+  background: #65D6A7;
+}
+
+html[data-theme="dark"] .history-dot.high,
+html[data-theme="dark"] .recent-dot.high {
+  background: #FF8585;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

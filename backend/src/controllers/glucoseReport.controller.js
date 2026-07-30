@@ -420,22 +420,42 @@ Se houver mais de uma medição na mesma categoria,
 elas aparecem uma abaixo da outra.
 ============================================================ */
 
-function formatarMedicoesCelula(registros) {
+function formatarMedicoesCelula(registros, mostrarDetalhes = false) {
     if (!registros || registros.length === 0) {
         return "—";
     }
 
     return registros
         .sort(function (a, b) {
-            return String(a.measurementTime)
-                .localeCompare(String(b.measurementTime));
+            return String(a.measurementTime || "")
+                .localeCompare(String(b.measurementTime || ""));
         })
         .map(function (registro) {
+            const valor = `${registro.glucoseValue} mg/dL`;
+
+            /*
+             * Nas categorias previstas, o título da coluna já informa
+             * o momento da medição. Por isso, exibimos somente o valor.
+             */
+            if (!mostrarDetalhes) {
+                return valor;
+            }
+
+            /*
+             * Em "Outras medições", o horário é importante porque não
+             * existe uma categoria fixa que indique quando o teste ocorreu.
+             */
             const horario = String(
                 registro.measurementTime || "--:--"
             ).substring(0, 5);
 
-            return `${registro.glucoseValue}\n${horario}`;
+            const observacao = String(registro.notes || "").trim();
+
+            if (observacao) {
+                return `${horario} — ${valor}\n${observacao}`;
+            }
+
+            return `${horario} — ${valor}`;
         })
         .join("\n");
 }
@@ -556,7 +576,7 @@ function desenharCabecalho(
         doc
             .font("Helvetica-Bold")
             .fontSize(21)
-            .fillColor("#432818")
+            .fillColor("#234D3D")
             .text(
                 "GlicLog",
                 40,
@@ -567,7 +587,7 @@ function desenharCabecalho(
     doc
         .font("Helvetica-Bold")
         .fontSize(17)
-        .fillColor("#432818")
+        .fillColor("#234D3D")
         .text(
             titulo,
             175,
@@ -596,7 +616,7 @@ function desenharCabecalho(
         .moveTo(40, 82)
         .lineTo(802, 82)
         .lineWidth(1)
-        .strokeColor("#D8C3B5")
+        .strokeColor("#C8DDD8")
         .stroke();
 
     const caixas = [
@@ -641,14 +661,14 @@ function desenharCabecalho(
                 6
             )
             .fillAndStroke(
-                "#FAF6F2",
-                "#E4D5CA"
+                "#F5FAF8",
+                "#C8DDD8"
             );
 
         doc
             .font("Helvetica")
             .fontSize(8)
-            .fillColor("#775B4A")
+            .fillColor("#4A6058")
             .text(
                 caixa.titulo,
                 x + 8,
@@ -662,7 +682,7 @@ function desenharCabecalho(
         doc
             .font("Helvetica-Bold")
             .fontSize(12)
-            .fillColor("#432818")
+            .fillColor("#234D3D")
             .text(
                 String(caixa.valor),
                 x + 8,
@@ -685,47 +705,52 @@ const colunas = [
     {
         chave: "data",
         titulo: "Data",
-        largura: 68
+        largura: 60
     },
     {
         chave: "jejum",
         titulo: "Jejum",
-        largura: 83
+        largura: 72
     },
     {
         chave: "depoisCafe",
         titulo: "Depois do\ncafé",
-        largura: 86
+        largura: 76
     },
     {
         chave: "antesAlmoco",
         titulo: "Antes do\nalmoço",
-        largura: 87
+        largura: 80
     },
     {
         chave: "depoisAlmoco",
         titulo: "Depois do\nalmoço",
-        largura: 87
+        largura: 80
     },
     {
         chave: "antesJanta",
         titulo: "Antes da\njanta",
-        largura: 87
+        largura: 80
     },
     {
         chave: "depoisJanta",
         titulo: "Depois da\njanta",
-        largura: 87
+        largura: 80
     },
     {
         chave: "ceia",
         titulo: "Ceia",
-        largura: 75
+        largura: 68
     },
     {
         chave: "madrugada",
         titulo: "Madrugada",
-        largura: 88
+        largura: 76
+    },
+    {
+        chave: "outros",
+        titulo: "Outras\nmedições",
+        largura: 84
     }
 ];
 
@@ -744,8 +769,8 @@ function desenharCabecalhoTabela(doc, y) {
                 altura
             )
             .fillAndStroke(
-                "#6F4E37",
-                "#5A3C2A"
+                "#3D8B6E",
+                "#2A6350"
             );
 
         doc
@@ -774,25 +799,32 @@ Altura necessária para uma linha
 ============================================================ */
 
 function calcularAlturaLinha(dia) {
-    const maioresQuantidades = [
-        dia.jejum.length,
-        dia.depoisCafe.length,
-        dia.antesAlmoco.length,
-        dia.depoisAlmoco.length,
-        dia.antesJanta.length,
-        dia.depoisJanta.length,
-        dia.ceia.length,
-        dia.madrugada.length
+    const categorias = [
+        dia.jejum,
+        dia.depoisCafe,
+        dia.antesAlmoco,
+        dia.depoisAlmoco,
+        dia.antesJanta,
+        dia.depoisJanta,
+        dia.ceia,
+        dia.madrugada,
+        dia.outros
     ];
 
-    const maior = Math.max(
+    const maiorQuantidade = Math.max(
         1,
-        ...maioresQuantidades
+        ...categorias.map(function (registros) {
+            return registros.length;
+        })
     );
 
+    const observacoesAvulsas = dia.outros.filter(function (registro) {
+        return String(registro.notes || "").trim();
+    }).length;
+
     return Math.max(
-        42,
-        maior * 24 + 8
+        38,
+        maiorQuantidade * 15 + observacoesAvulsas * 10 + 10
     );
 }
 
@@ -811,7 +843,7 @@ function desenharLinhaTabela(
     const fundo =
         indice % 2 === 0
             ? "#FFFFFF"
-            : "#FAF7F4";
+            : "#F5FAF8";
 
     let x = 40;
 
@@ -824,7 +856,8 @@ function desenharLinhaTabela(
             );
         } else {
             conteudo = formatarMedicoesCelula(
-                dia[coluna.chave]
+                dia[coluna.chave],
+                coluna.chave === "outros"
             );
         }
 
@@ -837,7 +870,7 @@ function desenharLinhaTabela(
             )
             .fillAndStroke(
                 fundo,
-                "#D8CFC8"
+                "#C8DDD8"
             );
 
         doc
@@ -848,10 +881,10 @@ function desenharLinhaTabela(
             )
             .fontSize(
                 coluna.chave === "data"
-                    ? 8
-                    : 7.2
+                    ? 7.7
+                    : 6.7
             )
-            .fillColor("#3F332C")
+            .fillColor("#1E2D2A")
             .text(
                 conteudo,
                 x + 4,
@@ -900,7 +933,7 @@ function desenharLegenda(doc, y) {
     doc
         .font("Helvetica-Bold")
         .fontSize(8)
-        .fillColor("#432818")
+        .fillColor("#234D3D")
         .text(
             "Referência utilizada no resumo:",
             x,
@@ -940,23 +973,43 @@ function desenharLegenda(doc, y) {
 Rodapé
 ============================================================ */
 
-function adicionarRodape(doc) {
-    const numeroPagina =
-        doc.bufferedPageRange().count;
+function adicionarRodapesTodasPaginas(doc) {
+    const intervalo = doc.bufferedPageRange();
+    const totalPaginas = intervalo.count;
 
-    doc
-        .font("Helvetica")
-        .fontSize(7)
-        .fillColor("#777777")
-        .text(
-            `Página ${numeroPagina} • Relatório gerado pelo GlicLog`,
-            40,
-            566,
-            {
-                width: 762,
-                align: "center"
-            }
-        );
+    for (let indice = 0; indice < totalPaginas; indice += 1) {
+        doc.switchToPage(intervalo.start + indice);
+
+        const yLinha = doc.page.height - 31;
+        const yTexto = doc.page.height - 24;
+        const margemInferiorOriginal = doc.page.margins.bottom;
+
+        doc.page.margins.bottom = 0;
+
+        doc
+            .moveTo(40, yLinha)
+            .lineTo(doc.page.width - 40, yLinha)
+            .lineWidth(0.6)
+            .strokeColor("#C8DDD8")
+            .stroke();
+
+        doc
+            .font("Helvetica")
+            .fontSize(7)
+            .fillColor("#7A9490")
+            .text(
+                `Página ${indice + 1} de ${totalPaginas} • Relatório gerado pelo GlicLog`,
+                40,
+                yTexto,
+                {
+                    width: doc.page.width - 80,
+                    align: "center",
+                    lineBreak: false
+                }
+            );
+
+        doc.page.margins.bottom = margemInferiorOriginal;
+    }
 }
 
 /* ============================================================
@@ -1052,14 +1105,14 @@ async function generateGlucosePdf(req, res) {
                     8
                 )
                 .fillAndStroke(
-                    "#FAF6F2",
-                    "#E4D5CA"
+                    "#F5FAF8",
+                    "#C8DDD8"
                 );
 
             documento
                 .font("Helvetica-Bold")
                 .fontSize(14)
-                .fillColor("#432818")
+                .fillColor("#234D3D")
                 .text(
                     "Nenhuma medição encontrada",
                     60,
@@ -1084,7 +1137,7 @@ async function generateGlucosePdf(req, res) {
                     }
                 );
 
-            adicionarRodape(documento);
+            adicionarRodapesTodasPaginas(documento);
             documento.end();
 
             return;
@@ -1103,9 +1156,7 @@ async function generateGlucosePdf(req, res) {
              * Se a próxima linha não couber,
              * cria uma nova página.
              */
-            if (y + alturaLinha > 535) {
-                adicionarRodape(documento);
-
+            if (y + alturaLinha > 548) {
                 documento.addPage();
 
                 adicionarLogo(documento);
@@ -1113,7 +1164,7 @@ async function generateGlucosePdf(req, res) {
                 documento
                     .font("Helvetica-Bold")
                     .fontSize(12)
-                    .fillColor("#432818")
+                    .fillColor("#234D3D")
                     .text(
                         titulo,
                         175,
@@ -1152,14 +1203,14 @@ async function generateGlucosePdf(req, res) {
             );
         });
 
-        if (y + 34 < 535) {
+        if (y + 34 < 548) {
             desenharLegenda(
                 documento,
                 y + 17
             );
         }
 
-        adicionarRodape(documento);
+        adicionarRodapesTodasPaginas(documento);
 
         documento.end();
 

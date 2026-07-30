@@ -36,6 +36,7 @@ const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
 
 const downloadWeekPdfBtn = document.getElementById("downloadWeekPdf");
 const downloadMonthPdfBtn = document.getElementById("downloadMonthPdf");
+const reportMonthInput = document.getElementById("reportMonth");
 
 /* ============================================================
 Estado em memória
@@ -689,17 +690,10 @@ function obterPeriodoPdf(periodo) {
 
     if (periodo === "week") {
         /*
-         * Se uma semana personalizada estiver selecionada,
-         * usamos exatamente essa semana no relatório.
+         * O relatório semanal continua usando a semana atual.
+         * A seleção de uma semana específica poderá ser adicionada
+         * posteriormente em um campo próprio do relatório.
          */
-        if (filtroSemana?.value) {
-            const { inicio, fim } = obterIntervaloSemanaISO(
-                filtroSemana.value
-            );
-
-            return { inicio, fim };
-        }
-
         const inicio = obterInicioDaSemana(agora);
         const fim = new Date(inicio);
 
@@ -710,11 +704,14 @@ function obterPeriodoPdf(periodo) {
     }
 
     /*
-     * Se um mês personalizado estiver selecionado,
-     * usamos exatamente esse mês no relatório.
+     * O mês do relatório é independente do filtro do histórico.
+     * Assim, um mês antigo escondido no filtro não interfere
+     * acidentalmente no PDF.
      */
-    if (filtroMes?.value) {
-        const [ano, mes] = filtroMes.value
+    const valorMes = reportMonthInput?.value || "";
+
+    if (valorMes) {
+        const [ano, mes] = valorMes
             .split("-")
             .map(Number);
 
@@ -749,6 +746,27 @@ function obterPeriodoPdf(periodo) {
     );
 
     return { inicio, fim };
+}
+
+function definirMesAtualNoRelatorio() {
+    if (!reportMonthInput) {
+        return;
+    }
+
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, "0");
+    const valorAtual = `${ano}-${mes}`;
+
+    if (!reportMonthInput.value) {
+        reportMonthInput.value = valorAtual;
+    }
+
+    /*
+     * Impede selecionar meses futuros, nos quais ainda
+     * não existem medições registradas.
+     */
+    reportMonthInput.max = valorAtual;
 }
 
 async function baixarRelatorioPdf(periodo, botao) {
@@ -810,9 +828,15 @@ async function baixarRelatorioPdf(periodo, botao) {
         );
 
         link.href = urlTemporaria;
-        link.download =
-            nomeEncontrado?.[1] ||
-            `gliclog-relatorio-${periodo}.pdf`;
+
+        if (periodo === "month" && reportMonthInput?.value) {
+            link.download =
+                `gliclog-relatorio-${reportMonthInput.value}.pdf`;
+        } else {
+            link.download =
+                nomeEncontrado?.[1] ||
+                `gliclog-relatorio-${periodo}.pdf`;
+        }
 
         document.body.appendChild(link);
         link.click();
@@ -865,4 +889,7 @@ if (downloadMonthPdfBtn) {
 Inicialização
 ============================================================ */
 
-document.addEventListener("DOMContentLoaded", carregarHistorico);
+document.addEventListener("DOMContentLoaded", function () {
+    definirMesAtualNoRelatorio();
+    carregarHistorico();
+});

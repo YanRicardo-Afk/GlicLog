@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../css/styleLogin.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/historico.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <script src="../js/theme.js"></script>
 </head>
 
 <body>
@@ -29,7 +31,7 @@
             <a href="perfil.html" class="nav-link">Perfil</a>
         </nav>
     </header>
-    
+
     <div class="header-minimal">
         <a href="dashboard.html" class="back-link-minimal" aria-label="Voltar para o início">
             <div class="back-icon-arrow" aria-hidden="true">
@@ -51,15 +53,21 @@
         <div class="history-report-actions">
             <div>
                 <h2 class="report-title">Relatório glicêmico</h2>
-                <p class="report-sub">Baixe uma tabela organizada por horários e refeições.</p>
+                <p class="report-sub">Selecione o mês desejado e baixe o relatório em PDF.</p>
             </div>
 
             <div class="report-buttons">
+                <div class="field filter-field report-month-field">
+                    <label for="reportMonth">Mês do relatório</label>
+                    <input type="month" id="reportMonth">
+                </div>
+
                 <button type="button" class="btn-report" id="downloadWeekPdf">
-                    Baixar semana em PDF
+                    Baixar semana atual em PDF
                 </button>
+
                 <button type="button" class="btn-report btn-report-secondary" id="downloadMonthPdf">
-                    Baixar mês em PDF
+                    Baixar mês selecionado em PDF
                 </button>
             </div>
         </div>

@@ -15,11 +15,12 @@
     justify-content: center;
     font-size: 32px;
     font-weight: 600;
-    color: white;
+    color: #FFFFFF;
 }
 
 .profile-name {
     font-size: 24px;
+    color: var(--text-dark);
 }
 
 .profile-email {
@@ -33,6 +34,105 @@
     gap: 12px;
 }
 
+.accessibility-card {
+    padding: 1.5rem;
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+}
+
+.accessibility-header {
+    margin-bottom: 1.25rem;
+}
+
+.accessibility-title {
+    margin: 0 0 5px;
+    color: var(--text-dark);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.accessibility-subtitle {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.setting-group {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.setting-legend {
+    margin-bottom: 10px;
+    color: var(--text-mid);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.theme-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.theme-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.theme-option-content {
+    min-height: 82px;
+    padding: 12px;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--text-mid);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.theme-option-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.theme-option-label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.theme-option:hover .theme-option-content {
+    border-color: var(--green-mid);
+    background: var(--green-light);
+}
+
+.theme-option input:focus-visible + .theme-option-content {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.theme-option input:checked + .theme-option-content {
+    border-color: var(--green-primary);
+    background: var(--green-light);
+    color: var(--green-dark);
+    box-shadow: 0 0 0 1px var(--green-primary);
+}
+
 .profile-actions {
     display: flex;
     flex-direction: column;
@@ -43,7 +143,8 @@
     padding: 12px;
     border-radius: 8px;
     border: 1px solid var(--border-soft);
-    background: white;
+    background: var(--white);
+    color: var(--text-dark);
     cursor: pointer;
     font-family: inherit;
 }
@@ -56,18 +157,24 @@
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #E74C3C;
-    color: white;
+    background: var(--error);
+    color: #FFFFFF;
     font-family: inherit;
     cursor: pointer;
 }
 
 .btn-danger:hover {
-    background: #C0392B;
+    filter: brightness(0.9);
 }
 
 @media (max-width: 600px) {
-    .profile-grid {
+    .profile-grid,
+    .theme-options {
         grid-template-columns: 1fr;
+    }
+
+    .theme-option-content {
+        min-height: 64px;
+        flex-direction: row;
     }
 }

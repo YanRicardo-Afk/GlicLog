@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="../css/styleLogin.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/perfil.css">
+    <link rel="stylesheet" href="../css/theme.css">
+
+    <!-- Executado no head para evitar o clarão do tema claro. -->
+    <script src="../js/theme.js"></script>
 </head>
 
 <body>
@@ -16,17 +20,17 @@
     <header class="topbar">
         <div class="topbar-brand">
             <div class="brand-icon">
-                <svg viewBox="0 0 24 24">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 2C12 2 5 9 5 14a7 7 0 0 0 14 0c0-5-7-12-7-12z"></path>
                 </svg>
             </div>
             <span class="brand-name">GlicoLog</span>
         </div>
 
-        <nav class="topbar-nav">
+        <nav class="topbar-nav" aria-label="Navegação principal">
             <a href="dashboard.html" class="nav-link">Início</a>
             <a href="historico.html" class="nav-link">Histórico</a>
-            <a href="perfil.html" class="nav-link active">Perfil</a>
+            <a href="perfil.html" class="nav-link active" aria-current="page">Perfil</a>
         </nav>
     </header>
 
@@ -43,13 +47,13 @@
     </div>
 
     <main class="dashboard-layout">
-        <section class="profile-header">
-            <div class="profile-avatar" id="profileAvatar">—</div>
+        <section class="profile-header" aria-labelledby="profileName">
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true">—</div>
             <h1 class="profile-name" id="profileName">Carregando...</h1>
             <p class="profile-email" id="profileEmail">—</p>
         </section>
 
-        <div class="profile-grid">
+        <div class="profile-grid" aria-label="Resumo do perfil">
             <div class="summary-card">
                 <span class="summary-value" id="countRegister">0</span>
                 <span class="summary-label">Registros</span>
@@ -66,9 +70,48 @@
             </div>
         </div>
 
+        <section class="accessibility-card" aria-labelledby="accessibilityTitle">
+            <div class="accessibility-header">
+                <h2 class="accessibility-title" id="accessibilityTitle">Aparência e acessibilidade</h2>
+                <p class="accessibility-subtitle">
+                    Escolha como o GlicoLog deve aparecer neste dispositivo.
+                </p>
+            </div>
+
+            <fieldset class="setting-group">
+                <legend class="setting-legend">Tema</legend>
+
+                <div class="theme-options">
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="light">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">☀</span>
+                            <span class="theme-option-label">Claro</span>
+                        </span>
+                    </label>
+
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="dark">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">☾</span>
+                            <span class="theme-option-label">Escuro</span>
+                        </span>
+                    </label>
+
+                    <label class="theme-option">
+                        <input type="radio" name="themePreference" value="system">
+                        <span class="theme-option-content">
+                            <span class="theme-option-icon" aria-hidden="true">◐</span>
+                            <span class="theme-option-label">Seguir sistema</span>
+                        </span>
+                    </label>
+                </div>
+            </fieldset>
+        </section>
+
         <div class="profile-actions">
-            <button class="btn-secondary">Editar Perfil</button>
-            <button class="btn-danger" id="logoutBtn">Sair</button>
+            <button type="button" class="btn-secondary">Editar Perfil</button>
+            <button type="button" class="btn-danger" id="logoutBtn">Sair</button>
         </div>
     </main>
 
