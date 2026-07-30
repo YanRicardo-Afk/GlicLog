@@ -55,6 +55,14 @@ let todosOsRegistros = [];
  */
 let idParaExcluir = null;
 
+/*
+ * Controle de acessibilidade dos modais.
+ * Guarda o modal aberto e o elemento que possuía foco antes da abertura.
+ */
+let modalAtivo = null;
+let elementoFocoAnterior = null;
+let elementosTemporariamenteInertes = [];
+
 /* ============================================================
 Status da glicemia
 ============================================================ */
@@ -189,7 +197,7 @@ function criarRegistro(item) {
 
     li.innerHTML = `
         <div class="history-left">
-            <div class="history-dot ${status.classe}"></div>
+            <div class="history-dot ${status.classe}" aria-hidden="true"></div>
             <div class="history-info">
                 <span class="history-value">
                     ${valor} mg/dL
@@ -468,6 +476,173 @@ async function carregarHistorico() {
 }
 
 /* ============================================================
+Acessibilidade e gerenciamento de foco dos modais
+============================================================ */
+
+function obterElementosFocaveis(container) {
+    if (!container) return [];
+
+    return Array.from(
+        container.querySelectorAll(
+            [
+                'a[href]',
+                'button:not([disabled])',
+                'input:not([disabled]):not([type="hidden"])',
+                'select:not([disabled])',
+                'textarea:not([disabled])',
+                '[tabindex]:not([tabindex="-1"])'
+            ].join(",")
+        )
+    ).filter(function (elemento) {
+        return !elemento.hidden &&
+            elemento.getAttribute("aria-hidden") !== "true" &&
+            elemento.offsetParent !== null;
+    });
+}
+
+function bloquearConteudoDaPagina(overlayAtivo) {
+    elementosTemporariamenteInertes = [];
+
+    Array.from(document.body.children).forEach(function (elemento) {
+        if (
+            elemento === overlayAtivo ||
+            elemento.tagName === "SCRIPT"
+        ) {
+            return;
+        }
+
+        elementosTemporariamenteInertes.push({
+            elemento,
+            inertAnterior: elemento.inert,
+            ariaHiddenAnterior: elemento.getAttribute("aria-hidden")
+        });
+
+        elemento.inert = true;
+        elemento.setAttribute("aria-hidden", "true");
+    });
+
+    document.body.classList.add("modal-open");
+}
+
+function desbloquearConteudoDaPagina() {
+    elementosTemporariamenteInertes.forEach(function (item) {
+        item.elemento.inert = item.inertAnterior;
+
+        if (item.ariaHiddenAnterior === null) {
+            item.elemento.removeAttribute("aria-hidden");
+        } else {
+            item.elemento.setAttribute(
+                "aria-hidden",
+                item.ariaHiddenAnterior
+            );
+        }
+    });
+
+    elementosTemporariamenteInertes = [];
+    document.body.classList.remove("modal-open");
+}
+
+function abrirModal(overlay, focoInicial) {
+    if (!overlay) return;
+
+    elementoFocoAnterior =
+        document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+
+    modalAtivo = overlay;
+    overlay.hidden = false;
+
+    bloquearConteudoDaPagina(overlay);
+
+    window.requestAnimationFrame(function () {
+        const alvo =
+            focoInicial ||
+            obterElementosFocaveis(overlay)[0] ||
+            overlay.querySelector('[role="dialog"]');
+
+        if (alvo instanceof HTMLElement) {
+            alvo.focus();
+        }
+    });
+}
+
+function fecharModal(overlay) {
+    if (!overlay) return;
+
+    overlay.hidden = true;
+
+    if (modalAtivo === overlay) {
+        modalAtivo = null;
+    }
+
+    desbloquearConteudoDaPagina();
+
+    if (
+        elementoFocoAnterior instanceof HTMLElement &&
+        document.contains(elementoFocoAnterior)
+    ) {
+        elementoFocoAnterior.focus();
+    }
+
+    elementoFocoAnterior = null;
+}
+
+function manterFocoNoModal(event) {
+    if (!modalAtivo || event.key !== "Tab") {
+        return;
+    }
+
+    const focaveis = obterElementosFocaveis(modalAtivo);
+
+    if (focaveis.length === 0) {
+        event.preventDefault();
+
+        const dialogo = modalAtivo.querySelector('[role="dialog"]');
+
+        if (dialogo instanceof HTMLElement) {
+            dialogo.focus();
+        }
+
+        return;
+    }
+
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[focaveis.length - 1];
+
+    if (event.shiftKey && document.activeElement === primeiro) {
+        event.preventDefault();
+        ultimo.focus();
+        return;
+    }
+
+    if (!event.shiftKey && document.activeElement === ultimo) {
+        event.preventDefault();
+        primeiro.focus();
+    }
+}
+
+document.addEventListener("keydown", function (event) {
+    if (!modalAtivo) {
+        return;
+    }
+
+    if (event.key === "Escape") {
+        event.preventDefault();
+
+        if (modalAtivo === editModalOverlay) {
+            fecharModalEdicao();
+        } else if (modalAtivo === deleteModalOverlay) {
+            fecharModalExclusao();
+        }
+
+        return;
+    }
+
+    manterFocoNoModal(event);
+});
+
+/* ============================================================
 Editar registro — abrir modal
 ============================================================ */
 
@@ -479,8 +654,11 @@ function abrirModalEdicao(id) {
     if (!registro) return;
 
     editIdInput.value = registro.id;
-    editGlicemiaInput.value = Number(registro.glucoseValue ?? registro.glicemia);
-    editTipoInput.value = registro.measurementType || registro.tipo || "";
+    editGlicemiaInput.value = Number(
+        registro.glucoseValue ?? registro.glicemia
+    );
+    editTipoInput.value =
+        registro.measurementType || registro.tipo || "";
     editHoraInput.value = formatarHora(registro);
     editRefeicaoInput.value = registro.meal || "";
     editObsInput.value = registro.notes || "";
@@ -490,12 +668,17 @@ function abrirModalEdicao(id) {
         editToast.textContent = "";
     }
 
-    editModalOverlay.hidden = false;
+    abrirModal(editModalOverlay, editGlicemiaInput);
 }
 
 function fecharModalEdicao() {
-    editModalOverlay.hidden = true;
+    fecharModal(editModalOverlay);
     editForm.reset();
+
+    if (editToast) {
+        editToast.className = "toast";
+        editToast.textContent = "";
+    }
 }
 
 if (editModalClose) {
@@ -507,7 +690,7 @@ if (editCancelBtn) {
 }
 
 if (editModalOverlay) {
-    editModalOverlay.addEventListener("click", function (event) {
+    editModalOverlay.addEventListener("mousedown", function (event) {
         if (event.target === editModalOverlay) {
             fecharModalEdicao();
         }
@@ -598,12 +781,12 @@ Excluir registro — abrir modal de confirmação
 
 function abrirModalExclusao(id) {
     idParaExcluir = id;
-    deleteModalOverlay.hidden = false;
+    abrirModal(deleteModalOverlay, deleteCancelBtn);
 }
 
 function fecharModalExclusao() {
+    fecharModal(deleteModalOverlay);
     idParaExcluir = null;
-    deleteModalOverlay.hidden = true;
 }
 
 if (deleteCancelBtn) {
@@ -611,7 +794,7 @@ if (deleteCancelBtn) {
 }
 
 if (deleteModalOverlay) {
-    deleteModalOverlay.addEventListener("click", function (event) {
+    deleteModalOverlay.addEventListener("mousedown", function (event) {
         if (event.target === deleteModalOverlay) {
             fecharModalExclusao();
         }
