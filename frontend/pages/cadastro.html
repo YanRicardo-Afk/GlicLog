@@ -3,85 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>GlicoLog — Criar conta</title>
+
   <link rel="stylesheet" href="../css/styleLogin.css">
   <link rel="stylesheet" href="../css/theme.css">
-  <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/accessibility.css">
+
+  <script src="../js/theme.js"></script>
   <script src="../js/accessibility.js"></script>
 </head>
+
 <body>
 
   <main class="app">
-    <div class="brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2"></path><path d="M12 6v6l4 2"></path></svg>
+    <div class="brand" aria-label="GlicoLog — Diário glicêmico">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2"></path>
+          <path d="M12 6v6l4 2"></path>
+        </svg>
       </div>
+
       <div>
         <div class="brand-name">GlicoLog</div>
         <div class="brand-sub">Diário glicêmico</div>
       </div>
     </div>
 
-    <div class="card">
+    <section class="card" aria-labelledby="cadastroTitle">
       <div class="glucose-bar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D8B6E" stroke-width="2.5" stroke-linecap="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <span>Crie sua conta gratuitamente</span>
+        <span>Crie sua conta para acompanhar suas medições</span>
       </div>
 
-      <h1 class="card-title">Criar conta</h1>
-      <p class="card-sub">Comece a monitorar sua glicemia hoje</p>
+      <h1 class="card-title" id="cadastroTitle">Criar conta</h1>
+      <p class="card-sub">Preencha seus dados para começar</p>
 
-      <div id="cad-toast" class="toast" role="alert" aria-live="polite"></div>
+      <div
+        id="cad-toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
 
-      <div class="field">
-        <label for="cad-nome">Nome completo</label>
-        <input type="text" id="cad-nome" placeholder="João Silva" autocomplete="name">
-        <span class="field-error" id="err-cad-nome">Nome é obrigatório</span>
-      </div>
+      <form id="cadastro-form" novalidate>
+        <div class="field">
+          <label for="cad-nome">Nome</label>
 
-      <div class="field">
-        <label for="cad-email">E-mail</label>
-        <input type="email" id="cad-email" placeholder="seu@email.com" autocomplete="email">
-        <span class="field-error" id="err-cad-email">Insira um e-mail válido</span>
-      </div>
+          <input
+            type="text"
+            id="cad-nome"
+            name="name"
+            placeholder="Seu nome"
+            autocomplete="name"
+            aria-describedby="err-cad-nome"
+            required
+            autofocus
+          >
 
-      <div class="row-2">
+          <span class="field-error" id="err-cad-nome">
+            Informe seu nome
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="cad-email">E-mail</label>
+
+          <input
+            type="email"
+            id="cad-email"
+            name="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+            inputmode="email"
+            aria-describedby="err-cad-email"
+            required
+          >
+
+          <span class="field-error" id="err-cad-email">
+            Insira um e-mail válido
+          </span>
+        </div>
+
         <div class="field">
           <label for="cad-senha">Senha</label>
-          <input type="password" id="cad-senha" placeholder="••••••••" autocomplete="new-password">
-          <div class="strength-bar">
-            <div class="strength-seg" id="s1"></div>
-            <div class="strength-seg" id="s2"></div>
-            <div class="strength-seg" id="s3"></div>
-            <div class="strength-seg" id="s4"></div>
+
+          <input
+            type="password"
+            id="cad-senha"
+            name="password"
+            placeholder="Mínimo de 6 caracteres"
+            autocomplete="new-password"
+            minlength="6"
+            aria-describedby="err-cad-senha strength-label"
+            required
+          >
+
+          <span class="field-error" id="err-cad-senha">
+            A senha deve ter pelo menos 6 caracteres
+          </span>
+
+          <div
+            class="strength-bar"
+            aria-hidden="true"
+          >
+            <span class="strength-seg" id="s1"></span>
+            <span class="strength-seg" id="s2"></span>
+            <span class="strength-seg" id="s3"></span>
+            <span class="strength-seg" id="s4"></span>
           </div>
-          <span class="strength-label" id="strength-label"></span>
-          <span class="field-error" id="err-cad-senha">Mínimo 6 caracteres</span>
+
+          <span
+            class="strength-label"
+            id="strength-label"
+            aria-live="polite"
+          ></span>
         </div>
 
         <div class="field">
-          <label for="cad-confirma">Confirmar</label>
-          <input type="password" id="cad-confirma" placeholder="••••••••" autocomplete="new-password">
-          <span class="field-error" id="err-cad-confirma">As senhas não coincidem</span>
+          <label for="cad-confirma">Confirmar senha</label>
+
+          <input
+            type="password"
+            id="cad-confirma"
+            name="passwordConfirmation"
+            placeholder="Digite a senha novamente"
+            autocomplete="new-password"
+            aria-describedby="err-cad-confirma"
+            required
+          >
+
+          <span class="field-error" id="err-cad-confirma">
+            As senhas não coincidem
+          </span>
         </div>
+
+        <button
+          class="btn-primary"
+          id="btn-cadastro"
+          type="submit"
+        >
+          Criar conta
+        </button>
+      </form>
+
+      <div class="divider" aria-hidden="true">
+        <hr>
+        <span>ou</span>
+        <hr>
       </div>
 
-      <button class="btn-primary" id="btn-cadastro" type="button">Criar conta</button>
-
-      <div class="divider"><hr><span>ou</span><hr></div>
-
       <p class="link-row">
-        Já tem conta? <a href="login.html">Entrar</a>
+        Já tem conta?
+        <a href="login.html">Entrar</a>
       </p>
-    </div>
+    </section>
   </main>
 
-<script src="../js/api.js"></script>
-<script src="../js/cadastro.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/cadastro.js"></script>
+
 </body>
 </html>
