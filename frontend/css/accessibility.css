@@ -1,0 +1,80 @@
+/* ============================================================
+   GlicoLog — accessibility.css
+   Preferências globais de acessibilidade
+   Carregue este arquivo depois de theme.css.
+   ============================================================ */
+
+:root {
+    --font-scale: 1;
+}
+
+html[data-font-size="small"] {
+    --font-scale: 0.93;
+}
+
+html[data-font-size="normal"] {
+    --font-scale: 1;
+}
+
+html[data-font-size="large"] {
+    --font-scale: 1.12;
+}
+
+/*
+   O zoom permite ampliar também os textos que ainda estão definidos
+   em px nos arquivos antigos do projeto.
+*/
+body {
+    zoom: var(--font-scale);
+}
+
+/*
+   A navbar mantém suas próprias dimensões e alinhamento.
+   Não recalculamos sua largura e não forçamos altura nos links,
+   evitando deformações quando a fonte é ampliada.
+*/
+.topbar,
+.mobile-nav {
+    max-width: none;
+}
+
+/* Melhora a leitura de textos longos no tamanho grande. */
+html[data-font-size="large"] p,
+html[data-font-size="large"] .card-sub,
+html[data-font-size="large"] .accessibility-subtitle,
+html[data-font-size="large"] .action-desc,
+html[data-font-size="large"] .history-meta,
+html[data-font-size="large"] .history-status {
+    line-height: 1.6;
+}
+
+/*
+   Aumenta a área de toque dos botões sem alterar os links da navbar,
+   que precisam continuar centralizados dentro da topbar.
+*/
+html[data-font-size="large"] button,
+html[data-font-size="large"] .btn-primary,
+html[data-font-size="large"] .btn-secondary,
+html[data-font-size="large"] .btn-danger,
+html[data-font-size="large"] .btn-report {
+    min-height: 44px;
+}
+
+/* Classe utilitária para mensagens exclusivas de leitores de tela. */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@media (max-width: 600px) {
+    html[data-font-size="large"] {
+        --font-scale: 1.08;
+    }
+}

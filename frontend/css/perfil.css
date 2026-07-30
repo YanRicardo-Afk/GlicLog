@@ -133,6 +133,92 @@
     box-shadow: 0 0 0 1px var(--green-primary);
 }
 
+.setting-description {
+    margin: -4px 0 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.setting-divider {
+    height: 1px;
+    margin: 1.5rem 0;
+    background: var(--border-soft);
+}
+
+.font-size-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.font-size-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.font-size-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.font-size-option-content {
+    min-height: 82px;
+    padding: 12px;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: var(--text-mid);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.font-size-preview {
+    color: var(--green-primary);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.font-size-preview-small {
+    font-size: 15px;
+}
+
+.font-size-preview-normal {
+    font-size: 20px;
+}
+
+.font-size-preview-large {
+    font-size: 26px;
+}
+
+.font-size-option-label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.font-size-option:hover .font-size-option-content {
+    border-color: var(--green-mid);
+    background: var(--green-light);
+}
+
+.font-size-option input:focus-visible + .font-size-option-content {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.font-size-option input:checked + .font-size-option-content {
+    border-color: var(--green-primary);
+    background: var(--green-light);
+    color: var(--green-dark);
+    box-shadow: 0 0 0 1px var(--green-primary);
+}
+
 .profile-actions {
     display: flex;
     flex-direction: column;
@@ -169,11 +255,13 @@
 
 @media (max-width: 600px) {
     .profile-grid,
-    .theme-options {
+    .theme-options,
+    .font-size-options {
         grid-template-columns: 1fr;
     }
 
-    .theme-option-content {
+    .theme-option-content,
+    .font-size-option-content {
         min-height: 64px;
         flex-direction: row;
     }

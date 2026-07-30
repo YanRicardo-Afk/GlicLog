@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/perfil.css">
     <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/accessibility.css">
 
-    <!-- Executado no head para evitar o clarão do tema claro. -->
+    <!-- Executados no head para aplicar preferências antes da página aparecer. -->
     <script src="../js/theme.js"></script>
+    <script src="../js/accessibility.js"></script>
 </head>
 
 <body>
@@ -107,6 +109,44 @@
                     </label>
                 </div>
             </fieldset>
+
+            <div class="setting-divider" aria-hidden="true"></div>
+
+            <fieldset class="setting-group">
+                <legend class="setting-legend">Tamanho da fonte</legend>
+
+                <p class="setting-description" id="fontSizeDescription">
+                    Ajuste o tamanho dos textos e elementos da interface.
+                </p>
+
+                <div class="font-size-options" aria-describedby="fontSizeDescription">
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="small">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-small" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Pequena</span>
+                        </span>
+                    </label>
+
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="normal">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-normal" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Normal</span>
+                        </span>
+                    </label>
+
+                    <label class="font-size-option">
+                        <input type="radio" name="fontSizePreference" value="large">
+                        <span class="font-size-option-content">
+                            <span class="font-size-preview font-size-preview-large" aria-hidden="true">A</span>
+                            <span class="font-size-option-label">Grande</span>
+                        </span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <p class="sr-only" id="accessibilityStatus" role="status" aria-live="polite"></p>
         </section>
 
         <div class="profile-actions">
