@@ -30,8 +30,7 @@ body {
 
 /*
    A navbar mantém suas próprias dimensões e alinhamento.
-   Não recalculamos sua largura e não forçamos altura nos links,
-   evitando deformações quando a fonte é ampliada.
+   Não recalculamos sua largura e não forçamos altura nos links.
 */
 .topbar,
 .mobile-nav {
@@ -49,8 +48,7 @@ html[data-font-size="large"] .history-status {
 }
 
 /*
-   Aumenta a área de toque dos botões sem alterar os links da navbar,
-   que precisam continuar centralizados dentro da topbar.
+   Aumenta a área de toque dos botões sem alterar os links da navbar.
 */
 html[data-font-size="large"] button,
 html[data-font-size="large"] .btn-primary,
@@ -58,6 +56,148 @@ html[data-font-size="large"] .btn-secondary,
 html[data-font-size="large"] .btn-danger,
 html[data-font-size="large"] .btn-report {
     min-height: 44px;
+}
+
+/* Alto contraste: funciona sobre o tema claro ou escuro. */
+html[data-contrast="high"] {
+    --border-soft: #000000;
+    --focus-ring: #FFD400;
+}
+
+html[data-theme="light"][data-contrast="high"],
+html:not([data-theme="dark"])[data-contrast="high"] {
+    color-scheme: light;
+
+    --green-primary: #005A3C;
+    --green-light: #D7F5E8;
+    --green-mid: #007A52;
+    --green-dark: #003D29;
+
+    --text-dark: #000000;
+    --text-mid: #111111;
+    --text-muted: #333333;
+
+    --white: #FFFFFF;
+    --bg-page: #F2F2F2;
+
+    --error: #A30000;
+    --error-bg: #FFE2E2;
+    --success: #005A32;
+
+    --surface-primary: #FFFFFF;
+    --surface-secondary: #F2F2F2;
+    --surface-elevated: #FFFFFF;
+    --surface-hover: #D7F5E8;
+    --overlay-bg: rgba(0, 0, 0, 0.76);
+
+    --shadow-soft: 0 0 0 2px #000000;
+    --shadow-modal: 0 0 0 3px #000000;
+}
+
+html[data-theme="dark"][data-contrast="high"] {
+    color-scheme: dark;
+
+    --green-primary: #78FFD0;
+    --green-light: #003D2D;
+    --green-mid: #52E8B7;
+    --green-dark: #B5FFE7;
+
+    --text-dark: #FFFFFF;
+    --text-mid: #FFFFFF;
+    --text-muted: #E8E8E8;
+    --border-soft: #FFFFFF;
+
+    --white: #000000;
+    --bg-page: #000000;
+
+    --error: #FF9B8F;
+    --error-bg: #3D0000;
+    --success: #9CFFD9;
+
+    --surface-primary: #000000;
+    --surface-secondary: #000000;
+    --surface-elevated: #101010;
+    --surface-hover: #003D2D;
+    --overlay-bg: rgba(0, 0, 0, 0.9);
+
+    --shadow-soft: 0 0 0 2px #FFFFFF;
+    --shadow-modal: 0 0 0 3px #FFFFFF;
+
+    --focus-ring: #FFD400;
+}
+
+/* Bordas mais fortes para separar os elementos. */
+html[data-contrast="high"] .card,
+html[data-contrast="high"] .action-card,
+html[data-contrast="high"] .summary-card,
+html[data-contrast="high"] .recent-list,
+html[data-contrast="high"] .history-report-actions,
+html[data-contrast="high"] .history-item,
+html[data-contrast="high"] .history-empty,
+html[data-contrast="high"] .modal-card,
+html[data-contrast="high"] .avatar-dropdown,
+html[data-contrast="high"] .accessibility-card,
+html[data-contrast="high"] input,
+html[data-contrast="high"] select,
+html[data-contrast="high"] textarea,
+html[data-contrast="high"] .btn-secondary,
+html[data-contrast="high"] .btn-report-secondary,
+html[data-contrast="high"] .icon-btn {
+    border-width: 2px;
+}
+
+/* Foco bem visível para teclado. */
+html[data-contrast="high"] input:focus,
+html[data-contrast="high"] select:focus,
+html[data-contrast="high"] textarea:focus,
+html[data-contrast="high"] button:focus-visible,
+html[data-contrast="high"] a:focus-visible,
+html[data-contrast="high"] [tabindex]:focus-visible {
+    outline: 4px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
+/* Links não dependem apenas da cor. */
+html[data-contrast="high"] a:not(.action-card):not(.mobile-nav-item):not(.nav-link) {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+/* Botões principais ganham uma borda de separação. */
+html[data-contrast="high"] .btn-primary,
+html[data-contrast="high"] .btn-report,
+html[data-contrast="high"] .btn-danger,
+html[data-contrast="high"] .last-reading-card {
+    border: 2px solid currentColor;
+}
+
+/* Indicadores de glicemia recebem borda, não dependendo só da cor. */
+html[data-contrast="high"] .history-dot,
+html[data-contrast="high"] .recent-dot,
+html[data-contrast="high"] .status-dot {
+    border: 2px solid currentColor;
+}
+
+html[data-contrast="high"] .history-dot.low,
+html[data-contrast="high"] .recent-dot.low,
+html[data-contrast="high"] .status-dot.low {
+    background: #FFB000;
+    color: #000000;
+}
+
+html[data-contrast="high"] .history-dot.normal,
+html[data-contrast="high"] .recent-dot.normal,
+html[data-contrast="high"] .status-dot.normal {
+    background: #00B86B;
+    color: #000000;
+}
+
+html[data-contrast="high"] .history-dot.high,
+html[data-contrast="high"] .recent-dot.high,
+html[data-contrast="high"] .status-dot.high {
+    background: #FF3B30;
+    color: #000000;
 }
 
 /* Classe utilitária para mensagens exclusivas de leitores de tela. */

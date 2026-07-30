@@ -7,6 +7,8 @@
     "use strict";
 
     const STORAGE_KEY_FONT_SIZE = "gliclog-font-size";
+    const STORAGE_KEY_HIGH_CONTRAST = "gliclog-high-contrast";
+
     const TAMANHOS_VALIDOS = ["small", "normal", "large"];
 
     function obterTamanhoFonteSalvo() {
@@ -17,7 +19,11 @@
             : "normal";
     }
 
-    function atualizarControles(tamanho) {
+    function obterAltoContrasteSalvo() {
+        return localStorage.getItem(STORAGE_KEY_HIGH_CONTRAST) === "true";
+    }
+
+    function atualizarControlesFonte(tamanho) {
         const controles = document.querySelectorAll(
             'input[name="fontSizePreference"]'
         );
@@ -27,18 +33,32 @@
         });
     }
 
-    function anunciarAlteracao(tamanho) {
-        const mensagens = {
-            small: "Tamanho de fonte pequeno ativado.",
-            normal: "Tamanho de fonte normal ativado.",
-            large: "Tamanho de fonte grande ativado."
-        };
+    function atualizarControleContraste(ativo) {
+        const controle = document.getElementById("highContrastPreference");
 
+        if (controle) {
+            controle.checked = ativo;
+        }
+
+        const estado = document.getElementById("highContrastState");
+
+        if (estado) {
+            estado.textContent = ativo ? "Ativado" : "Desativado";
+        }
+    }
+
+    function anunciarAlteracao(mensagem) {
         const regiaoStatus = document.getElementById("accessibilityStatus");
 
-        if (regiaoStatus) {
-            regiaoStatus.textContent = mensagens[tamanho];
+        if (!regiaoStatus) {
+            return;
         }
+
+        regiaoStatus.textContent = "";
+
+        window.requestAnimationFrame(function () {
+            regiaoStatus.textContent = mensagem;
+        });
     }
 
     function aplicarTamanhoFonte(tamanho, salvar = false, anunciar = false) {
@@ -52,10 +72,16 @@
             localStorage.setItem(STORAGE_KEY_FONT_SIZE, tamanhoValido);
         }
 
-        atualizarControles(tamanhoValido);
+        atualizarControlesFonte(tamanhoValido);
 
         if (anunciar) {
-            anunciarAlteracao(tamanhoValido);
+            const mensagens = {
+                small: "Tamanho de fonte pequeno ativado.",
+                normal: "Tamanho de fonte normal ativado.",
+                large: "Tamanho de fonte grande ativado."
+            };
+
+            anunciarAlteracao(mensagens[tamanhoValido]);
         }
 
         window.dispatchEvent(
@@ -67,12 +93,44 @@
         );
     }
 
+    function aplicarAltoContraste(ativo, salvar = false, anunciar = false) {
+        const contrasteAtivo = Boolean(ativo);
+
+        document.documentElement.dataset.contrast =
+            contrasteAtivo ? "high" : "normal";
+
+        if (salvar) {
+            localStorage.setItem(
+                STORAGE_KEY_HIGH_CONTRAST,
+                String(contrasteAtivo)
+            );
+        }
+
+        atualizarControleContraste(contrasteAtivo);
+
+        if (anunciar) {
+            anunciarAlteracao(
+                contrasteAtivo
+                    ? "Alto contraste ativado."
+                    : "Alto contraste desativado."
+            );
+        }
+
+        window.dispatchEvent(
+            new CustomEvent("gliclog:contrastchange", {
+                detail: {
+                    highContrast: contrasteAtivo
+                }
+            })
+        );
+    }
+
     function iniciarControles() {
-        const controles = document.querySelectorAll(
+        const controlesFonte = document.querySelectorAll(
             'input[name="fontSizePreference"]'
         );
 
-        controles.forEach(function (controle) {
+        controlesFonte.forEach(function (controle) {
             controle.addEventListener("change", function () {
                 if (controle.checked) {
                     aplicarTamanhoFonte(controle.value, true, true);
@@ -80,10 +138,25 @@
             });
         });
 
-        atualizarControles(obterTamanhoFonteSalvo());
+        const controleContraste =
+            document.getElementById("highContrastPreference");
+
+        if (controleContraste) {
+            controleContraste.addEventListener("change", function () {
+                aplicarAltoContraste(
+                    controleContraste.checked,
+                    true,
+                    true
+                );
+            });
+        }
+
+        atualizarControlesFonte(obterTamanhoFonteSalvo());
+        atualizarControleContraste(obterAltoContrasteSalvo());
     }
 
     aplicarTamanhoFonte(obterTamanhoFonteSalvo());
+    aplicarAltoContraste(obterAltoContrasteSalvo());
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", iniciarControles);
@@ -95,6 +168,13 @@
         aplicarTamanhoFonte: function (tamanho) {
             aplicarTamanhoFonte(tamanho, true, true);
         },
-        obterTamanhoFonte: obterTamanhoFonteSalvo
+
+        obterTamanhoFonte: obterTamanhoFonteSalvo,
+
+        aplicarAltoContraste: function (ativo) {
+            aplicarAltoContraste(ativo, true, true);
+        },
+
+        obterAltoContraste: obterAltoContrasteSalvo
     };
 })();

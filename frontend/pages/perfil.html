@@ -74,7 +74,10 @@
 
         <section class="accessibility-card" aria-labelledby="accessibilityTitle">
             <div class="accessibility-header">
-                <h2 class="accessibility-title" id="accessibilityTitle">Aparência e acessibilidade</h2>
+                <h2 class="accessibility-title" id="accessibilityTitle">
+                    Aparência e acessibilidade
+                </h2>
+
                 <p class="accessibility-subtitle">
                     Escolha como o GlicoLog deve aparecer neste dispositivo.
                 </p>
@@ -145,6 +148,37 @@
                     </label>
                 </div>
             </fieldset>
+
+            <div class="setting-divider" aria-hidden="true"></div>
+
+            <div class="setting-row">
+                <div class="setting-row-text">
+                    <span class="setting-row-title" id="highContrastTitle">
+                        Alto contraste
+                    </span>
+
+                    <span class="setting-description" id="highContrastDescription">
+                        Reforça cores, bordas e foco para facilitar a leitura.
+                    </span>
+                </div>
+
+                <label class="switch-control">
+                    <input
+                        type="checkbox"
+                        id="highContrastPreference"
+                        aria-labelledby="highContrastTitle"
+                        aria-describedby="highContrastDescription"
+                    >
+
+                    <span class="switch-track" aria-hidden="true">
+                        <span class="switch-thumb"></span>
+                    </span>
+
+                    <span class="switch-state" id="highContrastState">
+                        Desativado
+                    </span>
+                </label>
+            </div>
 
             <p class="sr-only" id="accessibilityStatus" role="status" aria-live="polite"></p>
         </section>

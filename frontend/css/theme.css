@@ -125,7 +125,7 @@ html[data-theme="dark"] .action-card.action-primary {
 }
 
 html[data-theme="dark"] .action-card.action-primary .action-icon {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
 }
 
 html[data-theme="dark"] .recent-item:hover,
