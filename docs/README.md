@@ -133,6 +133,10 @@ PORT=3000
 
 ---
 
+### Crie o banco de dados
+
+npm run db:create 
+
 ### 5. Inicie o servidor
 
 ```bash
