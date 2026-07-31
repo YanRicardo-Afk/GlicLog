@@ -178,31 +178,6 @@ Principais tabelas:
 
 ---
 
-## Capturas de Tela
-
-### Login
-
-> Inserir imagem
-
----
-
-### Dashboard
-
-> Inserir imagem
-
----
-
-### Histórico
-
-> Inserir imagem
-
----
-
-### Relatório PDF
-
-> Inserir imagem
-
----
 
 ## Melhorias Futuras
 
